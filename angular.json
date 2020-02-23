@@ -21,6 +21,7 @@
               "src/favicon.ico"
             ],
             "styles": [
+              "node_modules/ngx-toastr/toastr.css",
               "src/assets/css/demo.css",
               "src/assets/sass/app.scss",
               "src/styles.css"
@@ -77,6 +78,7 @@
               "src/assets/vendor/pace/pace.min.js"
             ],
             "styles": [
+              "node_modules/ngx-toastr/toastr.css",
               "src/assets/css/demo.css",
               "src/assets/sass/app.scss",
               "src/styles.css"

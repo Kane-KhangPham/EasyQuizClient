@@ -4,6 +4,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {SharedModule} from './shared/shared.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {HttpClientModule, HttpClient} from '@angular/common/http';
+import {ToastrModule} from 'ngx-toastr';
 
 import {
   PerfectScrollbarModule,
@@ -28,15 +29,16 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
   declarations: [AppComponent, FullLayoutComponent, LoginComponent],
-    imports: [
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        SharedModule,
-        HttpClientModule,
-        NgbModule.forRoot(),
-        PerfectScrollbarModule,
-        ReactiveFormsModule
-    ],
+  imports: [
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    SharedModule,
+    HttpClientModule,
+    NgbModule.forRoot(),
+    PerfectScrollbarModule,
+    ReactiveFormsModule,
+    ToastrModule.forRoot()
+  ],
   providers: [
     AuthService,
     BaseService,

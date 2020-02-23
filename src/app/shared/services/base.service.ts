@@ -8,7 +8,7 @@ const CONTENT_TYPE = 'application/json';
 @Injectable()
 export class BaseService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, ) { }
 
   private convertUrlRequest(query: string): string {
     return `${'http://localhost:5000/api'}${query}`;

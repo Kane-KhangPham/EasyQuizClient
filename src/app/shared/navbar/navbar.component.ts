@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, OnInit, AfterViewInit } from '@angular
 
 import { LayoutService } from '../services/layout.service';
 import { ConfigService } from '../services/config.service';
+import {AuthService} from '../auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
 
   public config: any = {};
 
-  constructor(private layoutService: LayoutService, private configService: ConfigService) {
+  constructor(private layoutService: LayoutService,
+              private authentService: AuthService,
+              private configService: ConfigService) {
   }
 
   ngOnInit() {
@@ -54,5 +57,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     } else {
       this.toggleHideSidebar.emit(true);
     }
+  }
+
+  logout() {
+    this.authentService.logout();
   }
 }
