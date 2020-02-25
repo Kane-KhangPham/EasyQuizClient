@@ -9,7 +9,7 @@ const routes: Routes = [
      component: FullLayoutPageComponent,
     data: {
       title: 'Full Layout Page'
-    },    
+    },
   }
 ];
 
