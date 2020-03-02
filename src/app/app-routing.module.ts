@@ -1,20 +1,18 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
-
-import { FullLayoutComponent } from './layouts/full/full-layout.component';
-
-import { Full_ROUTES } from './shared/routes/full-layout.routes';
-
+import { Routes, RouterModule } from '@angular/router';
+import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './shared/auth/auth-guard.service';
-import {LoginComponent} from './login/login.component';
+import { HomeComponent } from './Home/home.component';
+import { Home_Routes } from './shared/routes/home.routes';
+
 
 const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: 'full-layout',
+    redirectTo: 'ngan-hang-cau-hoi',
     pathMatch: 'full',
   },
-  { path: '', component: FullLayoutComponent, data: { title: 'full Views' }, children: Full_ROUTES, canActivate: [AuthGuard] },
+  { path: '', component: HomeComponent, children: Home_Routes, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent }
 ];
 
@@ -22,7 +20,4 @@ const appRoutes: Routes = [
   imports: [RouterModule.forRoot(appRoutes)],
   exports: [RouterModule]
 })
-
-export class AppRoutingModule {
-
-}
+export class AppRoutingModule { }

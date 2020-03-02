@@ -1,18 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-/* You can add global styles to this file, and also import other style files */
 
-/* @import url("assets/css/bootstrap.min.css"); */
-/* @import url("../src/assets/css/prism.min.css");
-@import url("../src/assets/css/sweetalert2.min.css");
-@import url("../src/assets/css/bootstrap-timepicker.min.css");
-@import url("../src/assets/css/wizard.css");
-@import url("../src/assets/css/leaflet.css");
-@import url("../src/assets/css/jquery-jvectormap-2.0.3.css");
-@import url("../src/assets/css/ng2-toastr.min.css");
-@import url("../src/assets/css/nouislider.min.css");
-@import url("../src/assets/css/data-table/index.css");
-@import url("../src/assets/css/data-table/icons.css");
-@import url("../src/assets/css/demo.css"); */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .bg-light {
     background-color:  #f8f9fa !important
@@ -65,4 +54,20 @@
 }
 .navbar{
     z-index: 1030;
+}
+
+.navbar .navbar-nav {
+    margin-right: 0;
+}
+
+body {
+    font-size: 0.875rem;
+}
+
+a.active {
+    color: #0ABC76 !important;
+}
+
+.btn-primary {
+    color: white !important;
 }

@@ -24,15 +24,15 @@ export class AuthService {
   login(username: string, password: string): Observable<UserResponse> {
     const url = '/user/login';
     const data = {
-      username: username,
-      password: password
-    }
+      username,
+      password
+    };
     return this.baseService.post(url, data)
       .pipe(map((user: UserResponse) => {
       localStorage.setItem('loginUser', JSON.stringify(user));
       this.currentUserSubject.next(user);
       return user;
-    }))
+    }));
   }
 
   logout() {
@@ -42,20 +42,21 @@ export class AuthService {
   }
 
   isAuthenticated() {
-    if (!!this.currentUserValue) {
-      const token = this.currentUserValue.token;
-      if (jwtHelper.isTokenExpired(token)) {
-        localStorage.removeItem('loginUser');
-        return false;
-      }
-      return true;
-    }
-    return false;
+    // if (!!this.currentUserValue) {
+    //   const token = this.currentUserValue.token;
+    //   if (jwtHelper.isTokenExpired(token)) {
+    //     localStorage.removeItem('loginUser');
+    //     return false;
+    //   }
+    //   return true;
+    // }
+    // return false;
+    return true;
   }
 }
 
 export interface UserResponse {
-  id: number,
-  fullname: string,
-  token: string
+  id: number;
+  fullname: string;
+  token: string;
 }

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs';
-import {AuthService} from '../auth/auth.service';
 
 const CONTENT_TYPE = 'application/json';
 @Injectable()
@@ -25,6 +23,10 @@ export class BaseService {
 
   post(url: string, body: any): Observable<any | Response> {
     return this.http.post(this.convertUrlRequest(url), body, this.getHeaders());
+  }
+
+  getRequest(urlRequest: string, requestOptions?: any): Observable<any | Response> {
+    return this.http.get(this.convertUrlRequest(urlRequest), requestOptions);
   }
 }
 
