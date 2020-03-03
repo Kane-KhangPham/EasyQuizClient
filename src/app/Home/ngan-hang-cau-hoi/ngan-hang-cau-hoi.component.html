@@ -1,16 +1,93 @@
-<div class="ui-g">
-  <div class="ui-g-12">
-    <div class="card card-w-title">
-      <h3>Ngân hàng câu hỏi</h3>
-      <div class="ui-g">
-        <div class="ui-g-4">
-            <span class="ui-float-label ">
-              <p-dropdown [options]="listMonHoc" [(ngModel)]="selectedMonHoc" [filter]="true" inputId="monHoc">
-              </p-dropdown>
-              <label for="monHoc">Môn học</label>
-            </span>
-        </div>
-      </div>
+<div class="my-3 p-3 bg-white rounded shadow-sm">
+  <h5 class="border-bottom border-gray pb-2 mb-0">Ngân hàng câu hỏi</h5>
+  <div class="row mt-3">
+    <div class="col-3">
+      <p-dropdown [options]="listMonHoc"
+                  [(ngModel)]="selectedMonHoc"
+                  styleClass="w-100"
+                  placeholder="Chọn môn học"></p-dropdown>
+    </div>
+
+    <div class="col-3">
+      <p-dropdown [options]="listMonHoc"
+                  [(ngModel)]="selectedMonHoc"
+                  styleClass="w-100"
+                  placeholder="Chọn người tạo"></p-dropdown>
+    </div>
+    <div class="col-4">
+      <input type="text"
+             pInputText
+             placeholder="Tìm kiếm"
+             class="w-100"/>
+    </div>
+    <div class="col-2 d-flex align-items-end">
+      <button (click)="search()"
+              class="btn btn-info">Tìm kiếm
+      </button>
+    </div>
+  </div>
+
+  <hr class="mb-3 mt-3">
+
+  <div class="row px-">
+    <div class="col-12 mb-2">
+      <button class="btn btn-success btn-sm"
+      (click)="showCreateModal()">Thêm mới</button>
+    </div>
+    <div class="col-12">
+      <p-table [value]="cars" [paginator]="true" [rows]="25" dataKey="id">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3em;"></th>
+            <th style="width: 15em;">Môn học</th>
+            <th>Câu hỏi</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-question let-expanded="expanded">
+          <tr>
+            <td>
+              <a href="#" [pRowToggler]="question">
+                <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+              </a>
+            </td>
+            <td>{{question.tenMonHoc}}</td>
+            <td>{{question.question}}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-question>
+          <tr>
+            <td [attr.colspan]="3">
+              <div class="ui-g ui-fluid">
+                <div class="ui-g-6">
+                  <b>A. {{question.optionA}}</b>
+                </div>
+                <div class="ui-g-6">
+                  <b>B. {{question.optionB}}</b>
+                </div>
+                <div class="ui-g-6">
+                  <b>C. {{question.optionC}}</b>
+                </div>
+                <div class="ui-g-6">
+                  <b>D. {{question.optionD}}</b>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
   </div>
 </div>
+
+<p-dialog header="Godfather I" [(visible)]="displayCreateModal" [modal]="true" [style]="{width: '50vw'}" [maximizable]="true" [baseZIndex]="10000"
+          [draggable]="false" [resizable]="false">
+  <p>The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
+    His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.
+    Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family,
+    kind and benevolent to those who give respect,
+    but given to ruthless violence whenever anything stands against the good of the family.</p>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="displayCreateModal=false" label="Yes"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="displayCreateModal=false" label="No" class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>

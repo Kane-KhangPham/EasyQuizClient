@@ -5,5 +5,5 @@ export class Question {
   optionB: string;
   optionC: string;
   optionD: string;
-  monHocId: number;
+  tenMonHoc: string;
 }
