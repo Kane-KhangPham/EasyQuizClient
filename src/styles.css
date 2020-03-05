@@ -71,3 +71,7 @@ a.active {
 .btn-primary {
     color: white !important;
 }
+
+.ui-dropdown {
+  display: block !important;
+}

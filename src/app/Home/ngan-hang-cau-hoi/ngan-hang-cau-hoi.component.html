@@ -9,10 +9,10 @@
     </div>
 
     <div class="col-3">
-      <p-dropdown [options]="listMonHoc"
-                  [(ngModel)]="selectedMonHoc"
+      <p-dropdown [options]="listGiaoVien"
+                  [(ngModel)]="selectedGiaoVien"
                   styleClass="w-100"
-                  placeholder="Chọn người tạo"></p-dropdown>
+                  placeholder="Chọn giáo viên tạo"></p-dropdown>
     </div>
     <div class="col-4">
       <input type="text"
@@ -29,13 +29,14 @@
 
   <hr class="mb-3 mt-3">
 
-  <div class="row px-">
+  <div class="row">
     <div class="col-12 mb-2">
       <button class="btn btn-success btn-sm"
       (click)="showCreateModal()">Thêm mới</button>
     </div>
     <div class="col-12">
-      <p-table [value]="cars" [paginator]="true" [rows]="25" dataKey="id">
+      <p-table [value]="listCauHoi"
+               dataKey="id">
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 3em;"></th>
@@ -50,42 +51,48 @@
                 <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
               </a>
             </td>
-            <td>{{question.tenMonHoc}}</td>
-            <td>{{question.question}}</td>
+            <td>{{question.monHocId}}</td>
+            <td>{{question.content}}</td>
           </tr>
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-question>
           <tr>
             <td [attr.colspan]="3">
               <div class="ui-g ui-fluid">
-                <div class="ui-g-6">
-                  <b>A. {{question.optionA}}</b>
-                </div>
-                <div class="ui-g-6">
-                  <b>B. {{question.optionB}}</b>
-                </div>
-                <div class="ui-g-6">
-                  <b>C. {{question.optionC}}</b>
-                </div>
-                <div class="ui-g-6">
-                  <b>D. {{question.optionD}}</b>
+                <div class="ui-g-6" *ngFor="let option of question.options; index as i">
+                  <b>{{i === 0 ? 'A' : i=== 1 ? 'B': i === 2 ? 'C' : 'D'}}. {{option.content}}</b>
                 </div>
               </div>
             </td>
           </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+          <p-paginator [rows]="25" totalRecords="100" (onPageChange)="paginate($event)"></p-paginator>
         </ng-template>
       </p-table>
     </div>
   </div>
 </div>
 
-<p-dialog header="Godfather I" [(visible)]="displayCreateModal" [modal]="true" [style]="{width: '50vw'}" [maximizable]="true" [baseZIndex]="10000"
-          [draggable]="false" [resizable]="false">
-  <p>The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
-    His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.
-    Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family,
-    kind and benevolent to those who give respect,
-    but given to ruthless violence whenever anything stands against the good of the family.</p>
+<p-dialog header="Thêm mới câu hỏi"
+          [(visible)]="displayCreateModal"
+          [modal]="true" [style]="{width: '50vw'}"
+          [maximizable]="true"
+          [position]="'top'"
+          [baseZIndex]="10000"
+          [draggable]="false"
+          [resizable]="false">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <label>Môn học</label>
+      <p-dropdown [options]="listMonHoc" [(ngModel)]="selectedMonHoc"></p-dropdown>
+    </div>
+    <div class="ui-g-12">
+      <input pInputText placeholder="Nhập môn học"/>
+    </div>
+  </div>
+
   <p-footer>
     <button type="button" pButton icon="pi pi-check" (click)="displayCreateModal=false" label="Yes"></button>
     <button type="button" pButton icon="pi pi-times" (click)="displayCreateModal=false" label="No" class="ui-button-secondary"></button>

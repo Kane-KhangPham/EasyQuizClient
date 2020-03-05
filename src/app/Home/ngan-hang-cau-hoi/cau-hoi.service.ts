@@ -9,7 +9,7 @@ export class CauHoiService {
 
   constructor(private baseService: BaseService) { }
 
-  getListCauHoi(page: number, pageSize: number, monHocId: number, nguoiTao: number) {
+  getListCauHoi(page: number, pageSize: number, monHocId: number = 0, nguoiTao: number = 0) {
     const url = '/question/getListQuestion';
     const params = {
       params: {

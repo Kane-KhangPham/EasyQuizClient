@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SelectItemGroup} from 'primeng';
 import {Question} from '../../shared/Model/Question';
+import {CauHoiService} from './cau-hoi.service';
 
 @Component({
   selector: 'app-ngan-hang-cau-hoi',
@@ -10,29 +11,24 @@ import {Question} from '../../shared/Model/Question';
 export class NganHangCauHoiComponent implements OnInit {
   displayCreateModal: boolean;
   listMonHoc: SelectItemGroup[];
+  listGiaoVien: SelectItemGroup[];
+  listCauHoi: any[] = [];
   selectedMonHoc: string;
-  cars: Question[] = [
-    {
-      id: 1,
-      question: 'Day la cau hoi 1',
-      optionA: 'Dap an A',
-      optionB: 'Dap an B',
-      optionC: 'Dap an C',
-      optionD: 'Dap an D',
-      tenMonHoc: 'Toán'
-    },
-    {
-      id: 2,
-      question: 'Day la cau hoi 2',
-      optionA: 'Dap an A',
-      optionB: 'Dap an B',
-      optionC: 'Dap an C',
-      optionD: 'Dap an D',
-      tenMonHoc: 'Toán'
-    }
-  ];
+  selectedGiaoVien: string;
+  pageSize = 25;
+  totalRow = 0;
+  constructor(private cauHoiService: CauHoiService ) { }
 
   ngOnInit(): void {
+    this.getListcauHoi();
+  }
+
+  private getListcauHoi(page = 1, monHocId = 0, nguoiTao= 0){
+    this.cauHoiService.getListCauHoi(page,this.pageSize, monHocId, nguoiTao)
+      .subscribe( res => {
+        this.listCauHoi = res.data;
+        this.totalRow = res.totalRow;
+      })
   }
 
   search() {
@@ -41,5 +37,9 @@ export class NganHangCauHoiComponent implements OnInit {
 
   showCreateModal() {
     this.displayCreateModal = true;
+  }
+
+  paginate($event) {
+
   }
 }
