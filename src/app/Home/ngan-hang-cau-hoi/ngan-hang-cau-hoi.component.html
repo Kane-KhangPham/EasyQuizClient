@@ -21,9 +21,7 @@
              class="w-100"/>
     </div>
     <div class="col-2 d-flex align-items-end">
-      <button (click)="search()"
-              class="btn btn-info">Tìm kiếm
-      </button>
+      <button pButton type="button" label="Tìm kiếm" (click)="search()"></button>
     </div>
   </div>
 
@@ -75,26 +73,59 @@
   </div>
 </div>
 
+
+<!--popup them moi cau hoi-->
 <p-dialog header="Thêm mới câu hỏi"
           [(visible)]="displayCreateModal"
-          [modal]="true" [style]="{width: '50vw'}"
+          [style]="{width: '50vw'}"
           [maximizable]="true"
           [position]="'top'"
           [baseZIndex]="10000"
-          [draggable]="false"
-          [resizable]="false">
-  <div class="ui-g">
+          [draggable]="false">
+  <div class="ui-g" [formGroup]="createForm">
     <div class="ui-g-12">
       <label>Môn học</label>
-      <p-dropdown [options]="listMonHoc" [(ngModel)]="selectedMonHoc"></p-dropdown>
+      <p-dropdown [options]="listMonHoc"
+                  formControlName="subject"></p-dropdown>
     </div>
     <div class="ui-g-12">
-      <input pInputText placeholder="Nhập môn học"/>
+      <label>Nội dung câu hỏi</label>
+      <textarea rows="3" pInputTextarea
+                autoResize="autoResize"
+                formControlName="question"></textarea>
+    </div>
+    <div class="ui-g-12">
+      <label>Đáp án A</label>
+      <textarea rows="2"
+                formControlName="optionA"
+                pInputTextarea ></textarea>
+    </div>
+
+    <div class="ui-g-12">
+      <label>Đáp án B</label>
+      <textarea rows="2"
+                pInputTextarea
+                formControlName="optionB"></textarea>
+    </div>
+
+    <div class="ui-g-12">
+      <label>Đáp án C</label>
+      <textarea rows="2"
+                formControlName="optionC"
+                pInputTextarea ></textarea>
+    </div>
+
+    <div class="ui-g-12">
+      <label>Đáp án D</label>
+      <textarea rows="2"
+                formControlName="optionD"
+                pInputTextarea></textarea>
     </div>
   </div>
 
   <p-footer>
-    <button type="button" pButton icon="pi pi-check" (click)="displayCreateModal=false" label="Yes"></button>
+    <button type="button" pButton icon="pi pi-check"
+            (click)="saveQuestion()" label="Yes"></button>
     <button type="button" pButton icon="pi pi-times" (click)="displayCreateModal=false" label="No" class="ui-button-secondary"></button>
   </p-footer>
 </p-dialog>

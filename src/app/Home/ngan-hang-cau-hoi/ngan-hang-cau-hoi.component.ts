@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {SelectItemGroup} from 'primeng';
+import {SelectItem, SelectItemGroup} from 'primeng';
 import {Question} from '../../shared/Model/Question';
 import {CauHoiService} from './cau-hoi.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-ngan-hang-cau-hoi',
@@ -10,17 +11,27 @@ import {CauHoiService} from './cau-hoi.service';
 })
 export class NganHangCauHoiComponent implements OnInit {
   displayCreateModal: boolean;
-  listMonHoc: SelectItemGroup[];
-  listGiaoVien: SelectItemGroup[];
+  listMonHoc: SelectItem[];
+  listGiaoVien: SelectItem[];
   listCauHoi: any[] = [];
   selectedMonHoc: string;
   selectedGiaoVien: string;
   pageSize = 25;
   totalRow = 0;
-  constructor(private cauHoiService: CauHoiService ) { }
+
+  createForm: FormGroup;
+  constructor(private cauHoiService: CauHoiService,
+              private buider: FormBuilder) { }
 
   ngOnInit(): void {
     this.getListcauHoi();
+    this.getLookupData();
+    this.initForm();
+  }
+
+  getLookupData() {
+    this.cauHoiService.getSubjectLookup().subscribe(
+      response => this.listMonHoc = response);
   }
 
   private getListcauHoi(page = 1, monHocId = 0, nguoiTao= 0){
@@ -41,5 +52,26 @@ export class NganHangCauHoiComponent implements OnInit {
 
   paginate($event) {
 
+  }
+
+  initForm() {
+    this.createForm = this.buider.group({
+      subject: ['', Validators.required],
+      question: ['', Validators.required],
+      optionA: ['', Validators.required],
+      optionB: ['', Validators.required],
+      optionC: ['', Validators.required],
+      optionD: ['', Validators.required]
+    });
+  }
+
+  saveQuestion() {
+    // validate data
+    if(this.createForm.invalid) {
+      return;
+    }
+    console.log('Form data', this.createForm.getRawValue());
+    this.createForm.reset();
+    this.displayCreateModal = false;
   }
 }

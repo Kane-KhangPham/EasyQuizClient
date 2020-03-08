@@ -4,7 +4,7 @@ import {NganHangCauHoiComponent} from './ngan-hang-cau-hoi/ngan-hang-cau-hoi.com
 import {HomeRoutingModule} from './home-routing.module';
 import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ButtonModule, PaginatorModule, TableModule} from 'primeng';
 import {DialogModule} from 'primeng/dialog';
 
@@ -19,7 +19,8 @@ import {DialogModule} from 'primeng/dialog';
         TableModule,
         InputTextModule,
         DialogModule,
-        PaginatorModule
+        PaginatorModule,
+        ReactiveFormsModule
     ],
   declarations: [
     NganHangCauHoiComponent

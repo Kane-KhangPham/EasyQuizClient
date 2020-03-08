@@ -3,6 +3,8 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}
 
+
+
 .bg-light {
     background-color:  #f8f9fa !important
 }
@@ -72,6 +74,8 @@ a.active {
     color: white !important;
 }
 
-.ui-dropdown {
+.ui-dropdown, textarea, input {
   display: block !important;
 }
+
+
