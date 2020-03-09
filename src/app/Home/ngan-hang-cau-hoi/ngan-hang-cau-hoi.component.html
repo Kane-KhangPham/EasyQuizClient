@@ -40,6 +40,7 @@
             <th style="width: 3em;"></th>
             <th style="width: 15em;">Môn học</th>
             <th>Câu hỏi</th>
+            <th style="width: 8em;" class="text-center">Hành động</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-question let-expanded="expanded">
@@ -49,13 +50,17 @@
                 <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
               </a>
             </td>
-            <td>{{question.monHocId}}</td>
+            <td>{{question.monHoc}}</td>
             <td>{{question.content}}</td>
+            <td class="text-center action-col">
+              <span class="mr-3 p-0 text-warning" (click)="editQuestion(question)"><i class="pi pi-check"></i></span>
+              <span class="text-danger" (click)="deleteQuestion(question.id)"><i class="pi pi-times"></i></span>
+            </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-question>
           <tr>
-            <td [attr.colspan]="3">
+            <td [attr.colspan]="4">
               <div class="ui-g ui-fluid">
                 <div class="ui-g-6" *ngFor="let option of question.options; index as i">
                   <b>{{i === 0 ? 'A' : i=== 1 ? 'B': i === 2 ? 'C' : 'D'}}. {{option.content}}</b>
@@ -75,7 +80,7 @@
 
 
 <!--popup them moi cau hoi-->
-<p-dialog header="Thêm mới câu hỏi"
+<p-dialog [header]="isCreate ? 'Thêm mới câu hỏi' : 'Chỉnh sửa câu hỏi'"
           [(visible)]="displayCreateModal"
           [style]="{width: '50vw'}"
           [maximizable]="true"
@@ -86,6 +91,7 @@
     <div class="ui-g-12">
       <label>Môn học</label>
       <p-dropdown [options]="listMonHoc"
+                  placeholder="Chọn môn học"
                   formControlName="subject"></p-dropdown>
     </div>
     <div class="ui-g-12">
@@ -125,7 +131,10 @@
 
   <p-footer>
     <button type="button" pButton icon="pi pi-check"
-            (click)="saveQuestion()" label="Yes"></button>
-    <button type="button" pButton icon="pi pi-times" (click)="displayCreateModal=false" label="No" class="ui-button-secondary"></button>
+            (click)="saveQuestion()" label="Lưu lại"></button>
+    <button type="button"
+            pButton icon="pi pi-times"
+            (click)="displayCreateModal=false" label="Hủy"
+            class="ui-button-secondary"></button>
   </p-footer>
 </p-dialog>

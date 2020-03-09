@@ -1,3 +1,7 @@
 textarea, input {
   width: 100%;
 }
+
+.action-col span {
+  cursor: pointer;
+}

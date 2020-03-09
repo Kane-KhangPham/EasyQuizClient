@@ -28,5 +28,9 @@ export class BaseService {
   getRequest(urlRequest: string, requestOptions?: any): Observable<any | Response> {
     return this.http.get(this.convertUrlRequest(urlRequest), requestOptions);
   }
+
+  deleteRequest(url: string) : Observable<any | Response> {
+    return this.http.delete(this.convertUrlRequest(url), this.getHeaders());
+  }
 }
 

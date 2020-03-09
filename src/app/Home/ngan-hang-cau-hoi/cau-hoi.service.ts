@@ -49,4 +49,22 @@ export class CauHoiService {
       })
     );
   }
+
+  /**
+   * Xoá câu hỏi
+   * @param questionId
+   */
+  deleteQuestion(questionId: number) {
+    const url = `/question/deleteQuestion/${questionId}`;
+    return this.baseService.deleteRequest(url);
+  }
+
+  /**
+   * Cập nhật câu hỏi
+   * @param data
+   */
+  updateQuestion(data: any) {
+    const url = '/question/updateQuestion';
+    return this.baseService.post(url, data);
+  }
 }

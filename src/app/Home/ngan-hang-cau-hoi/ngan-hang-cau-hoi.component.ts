@@ -18,6 +18,8 @@ export class NganHangCauHoiComponent implements OnInit {
   selectedGiaoVien: string;
   pageSize = 25;
   totalRow = 0;
+  isCreate = true;
+  selectedQuestion = null;
 
   createForm: FormGroup;
   constructor(private cauHoiService: CauHoiService,
@@ -47,6 +49,7 @@ export class NganHangCauHoiComponent implements OnInit {
   }
 
   showCreateModal() {
+    this.isCreate = true;
     this.displayCreateModal = true;
   }
 
@@ -56,7 +59,7 @@ export class NganHangCauHoiComponent implements OnInit {
 
   initForm() {
     this.createForm = this.buider.group({
-      subject: ['', Validators.required],
+      subject: [null, Validators.required],
       question: ['', Validators.required],
       optionA: ['', Validators.required],
       optionB: ['', Validators.required],
@@ -70,8 +73,63 @@ export class NganHangCauHoiComponent implements OnInit {
     if(this.createForm.invalid) {
       return;
     }
-    console.log('Form data', this.createForm.getRawValue());
-    this.createForm.reset();
-    this.displayCreateModal = false;
+    let data;
+    if(this.isCreate) {
+      data = this.createForm.getRawValue();
+      data.monHocId = data.subject;
+      delete data.subject;
+      this.cauHoiService.createQuestion(data).subscribe(res => {
+        //to-do: thong bao thanh cong;
+        this.createForm.reset();
+        this.displayCreateModal = false;
+        this.getListcauHoi();
+      })
+    } else {
+      const fieldMapping = ['optionA', 'optionB', 'optionC', 'optionD'];
+      data = this.createForm.getRawValue();
+      const postData: any = {};
+      postData.monHocId = data.subject;
+      postData.question = data.question;
+      postData.id = this.selectedQuestion.id;
+      postData.options = this.selectedQuestion.options.map((item, index) => {
+        item.value = data[fieldMapping[index]];
+        delete item.content;
+        return item;
+      })
+
+      this.cauHoiService.updateQuestion(postData).subscribe(res => {
+        //to-do: thong bao thanh cong;
+        this.createForm.reset();
+        this.displayCreateModal = false;
+        this.getListcauHoi();
+      })
+    }
+  }
+
+  deleteQuestion(questionId: number) {
+    this.cauHoiService.deleteQuestion(questionId)
+      .subscribe(res => {
+        if(res.success) {
+          this.getListcauHoi();
+        } else {
+          // to-do show toast message
+        }
+      })
+  }
+
+  editQuestion(question: any) {
+    this.selectedQuestion = question;
+    this.isCreate = false;
+    var bindFormData = {
+      subject: this.listMonHoc.find(x => x.label === question.monHoc)?.value,
+      question: question.content,
+      optionA: question.options[0].content,
+      optionB: question.options[1].content,
+      optionC: question.options[2].content,
+      optionD: question.options[3].content
+    }
+
+    this.createForm.patchValue(bindFormData);
+    this.displayCreateModal = true;
   }
 }
