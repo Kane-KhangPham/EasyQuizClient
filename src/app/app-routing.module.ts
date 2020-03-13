@@ -9,7 +9,7 @@ import { Home_Routes } from './shared/routes/home.routes';
 const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: 'ngan-hang-cau-hoi',
+    redirectTo: 'de-thi',
     pathMatch: 'full',
   },
   { path: '', component: HomeComponent, children: Home_Routes, canActivate: [AuthGuard] },

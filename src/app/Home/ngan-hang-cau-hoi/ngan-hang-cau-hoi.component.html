@@ -63,7 +63,7 @@
             <td [attr.colspan]="4">
               <div class="ui-g ui-fluid">
                 <div class="ui-g-6" *ngFor="let option of question.options; index as i">
-                  <b>{{i === 0 ? 'A' : i=== 1 ? 'B': i === 2 ? 'C' : 'D'}}. {{option.content}}</b>
+                  <b>{{i === 0 ? 'A' : i=== 1 ? 'B': i === 2 ? 'C' : 'D'}}. </b> <span>{{option.content}}</span>
                 </div>
               </div>
             </td>
@@ -92,40 +92,46 @@
       <label>Môn học</label>
       <p-dropdown [options]="listMonHoc"
                   placeholder="Chọn môn học"
-                  formControlName="subject"></p-dropdown>
+                  formControlName="subject">
+      </p-dropdown>
     </div>
     <div class="ui-g-12">
       <label>Nội dung câu hỏi</label>
       <textarea rows="3" pInputTextarea
                 autoResize="autoResize"
-                formControlName="question"></textarea>
+                formControlName="question">
+      </textarea>
     </div>
     <div class="ui-g-12">
       <label>Đáp án A</label>
       <textarea rows="2"
                 formControlName="optionA"
-                pInputTextarea ></textarea>
+                pInputTextarea>
+      </textarea>
     </div>
 
     <div class="ui-g-12">
       <label>Đáp án B</label>
       <textarea rows="2"
                 pInputTextarea
-                formControlName="optionB"></textarea>
+                formControlName="optionB">
+      </textarea>
     </div>
 
     <div class="ui-g-12">
       <label>Đáp án C</label>
       <textarea rows="2"
                 formControlName="optionC"
-                pInputTextarea ></textarea>
+                pInputTextarea>
+      </textarea>
     </div>
 
     <div class="ui-g-12">
       <label>Đáp án D</label>
       <textarea rows="2"
                 formControlName="optionD"
-                pInputTextarea></textarea>
+                pInputTextarea>
+      </textarea>
     </div>
   </div>
 

@@ -74,8 +74,9 @@ a.active {
     color: white !important;
 }
 
-.ui-dropdown, textarea, input {
+.ui-dropdown, textarea, input, .ui-calendar{
   display: block !important;
 }
+
 
 
