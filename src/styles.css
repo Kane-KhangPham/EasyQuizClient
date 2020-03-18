@@ -78,5 +78,13 @@ a.active {
   display: block !important;
 }
 
+label {
+  margin-bottom: 0;
+}
+
+.ui-calendar > input {
+  min-width: 100% !important;
+}
+
 
 

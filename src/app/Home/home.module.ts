@@ -5,7 +5,7 @@ import {HomeRoutingModule} from './home-routing.module';
 import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ButtonModule, CalendarModule, PaginatorModule, TableModule} from 'primeng';
+import {ButtonModule, CalendarModule, CheckboxModule, DataViewModule, PaginatorModule, TableModule} from 'primeng';
 import {DialogModule} from 'primeng/dialog';
 import { SoanDeComponent } from './soan-de/soan-de.component';
 
@@ -22,7 +22,9 @@ import { SoanDeComponent } from './soan-de/soan-de.component';
     DialogModule,
     PaginatorModule,
     ReactiveFormsModule,
-    CalendarModule
+    CalendarModule,
+    DataViewModule,
+    CheckboxModule
   ],
   declarations: [
     NganHangCauHoiComponent,

@@ -1,66 +1,175 @@
 <div class="my-3 p-3 bg-white rounded shadow-sm">
   <h5 class="border-bottom border-gray pb-2 mb-0">Soạn đề thi</h5>
   <div class="row mt-3" [formGroup]="deThiForm">
-    <div class="col-8">
+    <div class="col-9 pr-0">
       <div class="row">
-        <div class="col-6 mb-3 row">
-          <label class="col-3">Lớp học</label>
+        <div class="col-6 mb-2 row">
+          <label class="col-3 pr-0">Lớp học</label>
           <p-dropdown [options]="listLopHoc"
                       formControlName="lopHocId"
-                      class="col-9"
+                      class="col-9 pl-0"
                       styleClass="w-100"
                       placeholder="Chọn lớp thi">
           </p-dropdown>
         </div>
-        <div class="col-6 mb-3 row">
-          <label class="col-3">Học phần</label>
+        <div class="col-6 mb-2 row pr-0 pl-4">
+          <label class="col-3 pr-0">Học phần</label>
           <p-dropdown [options]="listMonHoc"
                       formControlName="monHocId"
                       styleClass="w-100"
-                      class="col-9"
+                      class="col-9 pl-0"
                       placeholder="Chọn học phần">
           </p-dropdown>
         </div>
-        <div class="col-6 mb-3 row">
-          <label class="col-3">Kỳ thi</label>
+        <div class="col-6 mb-2 row">
+          <label class="col-3 pr-0">Kỳ thi</label>
           <p-dropdown [options]="listKiThi"
-                      class="col-9"
+                      class="col-9 pl-0"
                       formControlName="kyThiId"
                       styleClass="w-100"
                       placeholder="Chọn kỳ thi">
           </p-dropdown>
         </div>
-        <div class="col-6 mb-3 row">
-          <label class="col-3">Ngày thi</label>
+        <div class="col-6 mb-2 row pr-0 pl-4">
+          <label class="col-3 pr-0">Ngày thi</label>
           <p-calendar formControlName="ngayThi"
                       placeholder="Chọn ngày thi"
-                      class="col-9"></p-calendar>
+                      class="col-9 pl-0">
+          </p-calendar>
         </div>
 
-        <div class="col-6 mb-3 row">
-          <label class="col-3">Thời gian thi</label>
-          <div class="col-9">
-            <input type="text" formControlName="thoiGian" pInputText>
+        <div class="col-6 mb-2 row">
+          <label class="col-3 pr-1">Thời gian thi</label>
+          <div class="col-9 pl-0">
+            <input type="text" formControlName="thoiGian" pInputText style="width: 100%;">
           </div>
         </div>
 
-        <div class="col-6 mb-3 row">
-          <label class="col-3">Số lượng câu hỏi</label>
-          <div class="col-9">
-            <input type="text" size="30" pInputText formControlName="soCau">
+        <div class="col-6 mb-2 row pr-0 pl-4">
+          <label class="col-3 pr-1">Số lượng câu hỏi</label>
+          <div class="col-9 pl-0">
+            <input type="text" size="30"
+                   pInputText
+                   formControlName="soCau"
+                   class="w-100">
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-4">
-      <label>Ghi Chú</label>
-      <textarea rows="6" pInputTextarea
+    <div class="col-3 mb-2 pl-0">
+      <label>Ghi chú</label>
+      <textarea rows="4" pInputTextarea
                 class="w-100"
-                autoResize="autoResize"
-                placeholder="Ghi chú"
                 formControlName="ghiChu">
       </textarea>
     </div>
   </div>
 </div>
+
+<div  class="my-3 p-3 bg-white rounded shadow-sm">
+  <h6 class="">Các câu hỏi đã lựa chọn</h6>
+  <button pButton type="button" label="Thêm câu hỏi" (click)="showPopupAddQuestion()"></button>
+  <button pButton type="button" label="Xem trước đề thi" (click)="viewDeThi()"></button>
+  <div class="row">
+    <div *ngIf="listCauHoi.length > 0" class="col-12">
+      <p-table [value]="listCauHoi"
+               dataKey="id">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3em;"></th>
+            <th style="width: 15em;">Môn học</th>
+            <th>Câu hỏi</th>
+            <th style="width: 4em;" class="text-center"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-question let-expanded="expanded">
+          <tr>
+            <td>
+              <a href="#" [pRowToggler]="question">
+                <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+              </a>
+            </td>
+            <td>{{question.monHoc}}</td>
+            <td>{{question.content}}</td>
+            <td class="text-center action-col">
+              <span class="text-danger" (click)="deleteQuestion(question.id)"><i class="pi pi-times"></i></span>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-question>
+          <tr>
+            <td [attr.colspan]="4">
+              <div class="ui-g ui-fluid">
+                <div class="ui-g-6" *ngFor="let option of question.options; index as i">
+                  <b>{{i === 0 ? 'A' : i=== 1 ? 'B': i === 2 ? 'C' : 'D'}}. </b> <span>{{option.content}}</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+
+        </ng-template>
+      </p-table>
+    </div>
+    <div *ngIf="listCauHoi.length === 0"> Chưa có câu hỏi nào trong đề thi</div>
+  </div>
+</div>
+
+
+<!--popup them moi cau hoi-->
+<p-dialog header="Thêm câu hỏi đề thi"
+          [(visible)]="displayCreateModal"
+          [style]="{width: '75vw'}"
+          [maximizable]="true"
+          [position]="'top'"
+          [baseZIndex]="10000"
+          [draggable]="false">
+
+  <p-dataView #dv [value]="questions"
+              [paginator]="true"
+              [rows]="15"
+              [lazy]="true"
+              (onLazyLoad)="loadData($event)"
+              [totalRecords]="totalRecords">
+    <p-header>
+      <div class="ui-helper-clearfix">
+        <div class="ui-g">
+          <label>Người tạo</label>
+          <p-dropdown [options]="listMonHoc"
+                      placeholder="Chọn người tạo">
+          </p-dropdown>
+
+          <input type="text" placeholder="Tìm kiếm">
+
+          <button>Tìm kiếm</button>
+        </div>
+      </div>
+    </p-header>
+    <ng-template let-question pTemplate="listItem">
+      <div class="question-item">
+        <label>
+          <p-checkbox name="question"
+                      binary="true"
+                      [(ngModel)]="question.checked"
+                      inputId="question-{{question.id}}">
+          </p-checkbox>
+        </label>
+        {{question.content}}
+      </div>
+    </ng-template>
+  </p-dataView>
+
+  <p-footer>
+    <button type="button" pButton
+            icon="pi pi-check"
+            (click)="addQuestion()"
+             label="Lưu lại"></button>
+    <button type="button"
+            pButton icon="pi pi-times"
+            (click)="displayCreateModal=false" label="Hủy"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>

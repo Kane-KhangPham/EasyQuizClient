@@ -3,13 +3,15 @@ import {BaseService} from '../../shared/services/base.service';
 import {Question} from '../../shared/Model/Question';
 import {map} from 'rxjs/operators';
 import {SelectItem} from 'primeng';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CauHoiService {
 
-  constructor(private baseService: BaseService) { }
+  constructor(private baseService: BaseService, private http: HttpClient) { }
 
   getListCauHoi(page: number, pageSize: number, monHocId: number = 0, nguoiTao: number = 0) {
     const url = '/question/getListQuestion';
@@ -66,5 +68,14 @@ export class CauHoiService {
   updateQuestion(data: any) {
     const url = '/question/updateQuestion';
     return this.baseService.post(url, data);
+  }
+
+  viewDeThi(data: any): Observable<any | Response> {
+    const url = '/dethi/viewDeThi1';
+    const httpOptions = {
+      'responseType'  : 'arraybuffer' as 'json'
+      //'responseType'  : 'blob' as 'json'        //This also worked
+    };
+   return this.http.post(this.baseService.convertUrlRequest(url), data, httpOptions);
   }
 }

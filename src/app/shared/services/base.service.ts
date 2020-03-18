@@ -8,7 +8,7 @@ export class BaseService {
 
   constructor(private http: HttpClient, ) { }
 
-  private convertUrlRequest(query: string): string {
+  public convertUrlRequest(query: string): string {
     return `${'http://localhost:5000/api'}${query}`;
   }
 
