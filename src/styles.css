@@ -86,5 +86,9 @@ label {
   min-width: 100% !important;
 }
 
+.ui-autocomplete > input {
+  width: 100% !important;
+}
+
 
 

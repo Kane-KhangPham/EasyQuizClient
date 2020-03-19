@@ -9,4 +9,5 @@ export class DeThi {
   soCau: number;
   soLuongDe: number;
   cauHoi: Question[];
+  ghiChu: string;
 }

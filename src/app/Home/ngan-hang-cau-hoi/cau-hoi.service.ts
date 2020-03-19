@@ -78,4 +78,55 @@ export class CauHoiService {
     };
    return this.http.post(this.baseService.convertUrlRequest(url), data, httpOptions);
   }
+
+  /**
+   * Lấy danh sách kì thi
+   */
+  getListKyThi() {
+    const url = '/dethi/getListKyThi';
+    return this.baseService.getRequest(url).pipe(
+      map(res => {
+        return res.map( item => {
+          return {
+            label: item.value,
+            value: item.id
+          } as SelectItem
+        })
+      })
+    );
+  }
+
+  /**
+   * Lấy danh sách lớp học
+   */
+  getListLopHoc() {
+    const url = '/dethi/getListLopHoc';
+    return this.baseService.getRequest(url).pipe(
+      map(res => {
+        return res.map( item => {
+          return {
+            label: item.value,
+            value: item.id
+          } as SelectItem
+        })
+      })
+    );
+  }
+
+  /**
+   * lấy danh sách suggestion môn học theo keyword
+   */
+  suggestionMonHoc(filter: string) {
+    const url = `/dethi/getListMonHoc?filter=${filter}`;
+    return this.baseService.getRequest(url).pipe(
+      map(res => {
+        return res.map( item => {
+          return {
+            label: item.value,
+            value: item.id
+          } as SelectItem
+        })
+      })
+    );
+  }
 }

@@ -15,12 +15,12 @@ export class SoanDeComponent implements OnInit {
   listKiThi: SelectItem[];
   listMonHoc: SelectItem[];
   deThiData: DeThi = new DeThi();
-  selectedListCauHoi: Question[] = [];
   deThiForm: FormGroup;
   listCauHoi = [];
   displayCreateModal = false;
   selectedQuestions = [];
-
+  questions = [];
+  totalRecords = 0;
 
   constructor(private fb: FormBuilder,
               private cauHoiService: CauHoiService) {
@@ -28,6 +28,19 @@ export class SoanDeComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.getDataForCombobox();
+  }
+
+  /**
+   * Lấy danh sách dữ liệu cho combobox
+   */
+  getDataForCombobox() {
+    this.cauHoiService.getListKyThi().subscribe(data => {
+      this.listKiThi = data;
+    });
+    this.cauHoiService.getListLopHoc().subscribe(data => {
+      this.listLopHoc = data;
+    })
   }
 
   initForm() {
@@ -38,21 +51,26 @@ export class SoanDeComponent implements OnInit {
       ngayThi: [this.deThiData.ngayThi],
       thoiGian: [this.deThiData.thoiGian],
       soCau: [this.deThiData.soCau],
-      soLuongDe: [this.deThiData.soLuongDe]
+      soLuongDe: [this.deThiData.soLuongDe],
+      ghiChu: [this.deThiData.ghiChu]
     });
   }
 
+  /**
+   * Xóa câu hỏi trong danh sách đề thi
+   * @param questionId
+   */
   deleteQuestion(questionId: number) {
-
+    console.log('-- delete question with id:', questionId);
+    const index = this.listCauHoi.findIndex(x => x.id === questionId);
+    if(index >= 0) {
+      this.listCauHoi.splice(index, 1);
+    }
   }
 
   showPopupAddQuestion() {
     this.displayCreateModal = true;
   }
-
-  questions = [];
-
-  totalRecords = 0;
 
   loadData($event) {
     console.log('---', $event);
@@ -66,11 +84,21 @@ export class SoanDeComponent implements OnInit {
   }
 
   addQuestion() {
-    console.log('List selected Cau hoi', this.selectedQuestions);
     this.listCauHoi = this.questions.filter(x => x.checked);
-    console.log('List Cau hoi', this.listCauHoi);
+    console.log('-- list cau hoi: ', this.listCauHoi);
     this.selectedQuestions = [];
     this.displayCreateModal = false;
+  }
+
+  /**
+   * Gọi ý môn học
+   * @param event
+   */
+  filterMonHoc(event) {
+    let query = event.query;
+    this.cauHoiService.suggestionMonHoc(query).subscribe(subjects => {
+      this.listMonHoc = subjects;
+    });
   }
 
   viewDeThi() {

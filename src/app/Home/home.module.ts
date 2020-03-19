@@ -5,27 +5,28 @@ import {HomeRoutingModule} from './home-routing.module';
 import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ButtonModule, CalendarModule, CheckboxModule, DataViewModule, PaginatorModule, TableModule} from 'primeng';
+import {AutoCompleteModule, ButtonModule, CalendarModule, CheckboxModule, DataViewModule, PaginatorModule, TableModule} from 'primeng';
 import {DialogModule} from 'primeng/dialog';
 import { SoanDeComponent } from './soan-de/soan-de.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    InputTextModule,
-    ButtonModule,
-    HomeRoutingModule,
-    DropdownModule,
-    FormsModule,
-    TableModule,
-    InputTextModule,
-    DialogModule,
-    PaginatorModule,
-    ReactiveFormsModule,
-    CalendarModule,
-    DataViewModule,
-    CheckboxModule
-  ],
+    imports: [
+        CommonModule,
+        InputTextModule,
+        ButtonModule,
+        HomeRoutingModule,
+        DropdownModule,
+        FormsModule,
+        TableModule,
+        InputTextModule,
+        DialogModule,
+        PaginatorModule,
+        ReactiveFormsModule,
+        CalendarModule,
+        DataViewModule,
+        CheckboxModule,
+        AutoCompleteModule
+    ],
   declarations: [
     NganHangCauHoiComponent,
     SoanDeComponent

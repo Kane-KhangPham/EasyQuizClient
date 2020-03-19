@@ -14,12 +14,20 @@
         </div>
         <div class="col-6 mb-2 row pr-0 pl-4">
           <label class="col-3 pr-0">Học phần</label>
-          <p-dropdown [options]="listMonHoc"
-                      formControlName="monHocId"
-                      styleClass="w-100"
-                      class="col-9 pl-0"
-                      placeholder="Chọn học phần">
-          </p-dropdown>
+<!--          <p-dropdown [options]="listMonHoc"-->
+<!--                      formControlName="monHocId"-->
+<!--                      styleClass="w-100"-->
+<!--                      class="col-9 pl-0"-->
+<!--                      placeholder="Chọn học phần">-->
+<!--          </p-dropdown>-->
+          <p-autoComplete formControlName="monHocId"
+                          [suggestions]="listMonHoc"
+                          (completeMethod)="filterMonHoc($event)"
+                          field="name" class="col-9 pl-0"
+                          [size]="10" styleClass="w-100"
+                          placeholder="Chọn học phần"
+                          [minLength]="1">
+          </p-autoComplete>
         </div>
         <div class="col-6 mb-2 row">
           <label class="col-3 pr-0">Kỳ thi</label>
@@ -67,12 +75,20 @@
   </div>
 </div>
 
-<div  class="my-3 p-3 bg-white rounded shadow-sm">
-  <h6 class="">Các câu hỏi đã lựa chọn</h6>
-  <button pButton type="button" label="Thêm câu hỏi" (click)="showPopupAddQuestion()"></button>
-  <button pButton type="button" label="Xem trước đề thi" (click)="viewDeThi()"></button>
+<div class="my-3 p-3 bg-white rounded shadow-sm">
+  <h6 class="">Danh sách câu hỏi</h6>
+  <button pButton type="button"
+          label="Thêm câu hỏi"
+          class="mr-1 btn-sm btn ui-button-success"
+          icon="pi pi-plus"
+          (click)="showPopupAddQuestion()"></button>
+  <button pButton type="button"
+          label="Xem trước đề thi"
+          icon="pi pi-file-pdf"
+          class="btn-sm btn btn-info"
+          (click)="viewDeThi()"></button>
   <div class="row">
-    <div *ngIf="listCauHoi.length > 0" class="col-12">
+    <div *ngIf="listCauHoi.length > 0" class="col-12 mt-3">
       <p-table [value]="listCauHoi"
                dataKey="id">
         <ng-template pTemplate="header">
@@ -93,7 +109,11 @@
             <td>{{question.monHoc}}</td>
             <td>{{question.content}}</td>
             <td class="text-center action-col">
-              <span class="text-danger" (click)="deleteQuestion(question.id)"><i class="pi pi-times"></i></span>
+              <span class="text-danger"
+                    style="cursor: pointer"
+                    (click)="deleteQuestion(question.id)">
+                <i class="pi pi-times"></i>
+              </span>
             </td>
           </tr>
         </ng-template>
@@ -102,7 +122,7 @@
             <td [attr.colspan]="4">
               <div class="ui-g ui-fluid">
                 <div class="ui-g-6" *ngFor="let option of question.options; index as i">
-                  <b>{{i === 0 ? 'A' : i=== 1 ? 'B': i === 2 ? 'C' : 'D'}}. </b> <span>{{option.content}}</span>
+                  <b>{{i === 0 ? 'A' : i === 1 ? 'B' : i === 2 ? 'C' : 'D'}}. </b> <span>{{option.content}}</span>
                 </div>
               </div>
             </td>
@@ -114,7 +134,9 @@
         </ng-template>
       </p-table>
     </div>
-    <div *ngIf="listCauHoi.length === 0"> Chưa có câu hỏi nào trong đề thi</div>
+    <div class="col-12 py-3" *ngIf="listCauHoi.length === 0">
+      <span class="text-info">Chưa có câu hỏi nào trong đề thi</span>
+    </div>
   </div>
 </div>
 
@@ -128,36 +150,38 @@
           [baseZIndex]="10000"
           [draggable]="false">
 
-  <p-dataView #dv [value]="questions"
+  <p-dataView [value]="questions"
               [paginator]="true"
               [rows]="15"
               [lazy]="true"
               (onLazyLoad)="loadData($event)"
               [totalRecords]="totalRecords">
     <p-header>
-      <div class="ui-helper-clearfix">
-        <div class="ui-g">
-          <label>Người tạo</label>
-          <p-dropdown [options]="listMonHoc"
-                      placeholder="Chọn người tạo">
-          </p-dropdown>
-
-          <input type="text" placeholder="Tìm kiếm">
-
-          <button>Tìm kiếm</button>
-        </div>
+      <div class="ui-g">
+        <p-dropdown [options]="listMonHoc"
+                    class="mr-2"
+                    placeholder="Chọn người tạo">
+        </p-dropdown>
+        <p-dropdown [options]="listMonHoc"
+                    class="mr-2"
+                    placeholder="Chọn môn học">
+        </p-dropdown>
+        <input type="text" placeholder="Tìm kiếm theo câu hỏi" pInputText style="min-width: 20em;">
+        <button pButton type="button"
+                label="Tìm kiếm"
+                class="btn btn-success ml-2" icon="pi pi-search"></button>
       </div>
     </p-header>
     <ng-template let-question pTemplate="listItem">
-      <div class="question-item">
-        <label>
+      <div class="question-item py-1">
+        <label for="question-{{question.id}}" class="position-relative">
           <p-checkbox name="question"
                       binary="true"
                       [(ngModel)]="question.checked"
                       inputId="question-{{question.id}}">
           </p-checkbox>
+          <span class="pl-2 pt-2">{{question.content}}</span>
         </label>
-        {{question.content}}
       </div>
     </ng-template>
   </p-dataView>
@@ -166,7 +190,7 @@
     <button type="button" pButton
             icon="pi pi-check"
             (click)="addQuestion()"
-             label="Lưu lại"></button>
+            label="Lưu lại"></button>
     <button type="button"
             pButton icon="pi pi-times"
             (click)="displayCreateModal=false" label="Hủy"
