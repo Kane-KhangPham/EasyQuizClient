@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {SelectItem} from 'primeng';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {DeThi} from '../../shared/Model/DeThi';
+import {DeThi, ObjectReference} from '../../shared/Model/DeThi';
 import {Question} from '../../shared/Model/Question';
 import {CauHoiService} from '../ngan-hang-cau-hoi/cau-hoi.service';
+import {ToastMessageService} from '../../shared/services/toast-message.service';
 
 @Component({
   selector: 'app-soan-de',
@@ -11,9 +12,9 @@ import {CauHoiService} from '../ngan-hang-cau-hoi/cau-hoi.service';
   styleUrls: ['./soan-de.component.css']
 })
 export class SoanDeComponent implements OnInit {
-  listLopHoc: SelectItem[];
-  listKiThi: SelectItem[];
-  listMonHoc: SelectItem[];
+  listLopHoc: ObjectReference[];
+  listKiThi: ObjectReference[];
+  listMonHoc: ObjectReference[];
   deThiData: DeThi = new DeThi();
   deThiForm: FormGroup;
   listCauHoi = [];
@@ -23,7 +24,8 @@ export class SoanDeComponent implements OnInit {
   totalRecords = 0;
 
   constructor(private fb: FormBuilder,
-              private cauHoiService: CauHoiService) {
+              private cauHoiService: CauHoiService,
+              private messageService: ToastMessageService) {
   }
 
   ngOnInit(): void {
@@ -45,9 +47,9 @@ export class SoanDeComponent implements OnInit {
 
   initForm() {
     this.deThiForm = this.fb.group({
-      lopHocId: [this.deThiData.lopHocId],
-      kyThiId: [this.deThiData.kyThiId],
-      monHocId: [this.deThiData.monHocId],
+      lopHoc: [this.deThiData.lopHoc],
+      kyThi: [this.deThiData.kyThi],
+      monHoc: [this.deThiData.monHoc],
       ngayThi: [this.deThiData.ngayThi],
       thoiGian: [this.deThiData.thoiGian],
       soCau: [this.deThiData.soCau],
@@ -73,7 +75,6 @@ export class SoanDeComponent implements OnInit {
   }
 
   loadData($event) {
-    console.log('---', $event);
     const pageSize = $event.rows;
     const page = ($event.first / pageSize) + 1;
     this.cauHoiService.getListCauHoi(page, pageSize)
@@ -85,7 +86,6 @@ export class SoanDeComponent implements OnInit {
 
   addQuestion() {
     this.listCauHoi = this.questions.filter(x => x.checked);
-    console.log('-- list cau hoi: ', this.listCauHoi);
     this.selectedQuestions = [];
     this.displayCreateModal = false;
   }
@@ -99,6 +99,30 @@ export class SoanDeComponent implements OnInit {
     this.cauHoiService.suggestionMonHoc(query).subscribe(subjects => {
       this.listMonHoc = subjects;
     });
+  }
+
+  /**
+   * Lưu đề thi
+   */
+  saveDeThi() {
+    const formRawData = this.deThiForm.getRawValue();
+    if(!this.validateData()){
+      this.messageService.error('Chưa đủ thông tin');
+      return;
+    }
+    const data = JSON.parse(JSON.stringify(formRawData));
+    data.cauHois = this.listCauHoi;
+    console.log('Form data:', data);
+    this.cauHoiService.saveDeThi(data).subscribe(x=> {
+      this.messageService.success('Success');
+    })
+  }
+
+  /**
+   * Validate data
+   */
+  validateData(){
+    return true;
   }
 
   viewDeThi() {

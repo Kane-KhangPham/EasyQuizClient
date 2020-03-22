@@ -1,13 +1,18 @@
 import {Question} from './Question';
 
 export class DeThi {
-  lopHocId: number;
-  kyThiId: number;
-  monHocId: number;
+  lopHoc: ObjectReference;
+  kyThi: ObjectReference;
+  monHoc: ObjectReference;
   ngayThi: Date;
   thoiGian: number;
   soCau: number;
-  soLuongDe: number;
+  soLuongDe: number = 1;
   cauHoi: Question[];
   ghiChu: string;
+}
+
+export class ObjectReference {
+  id: number;
+  value: any;
 }

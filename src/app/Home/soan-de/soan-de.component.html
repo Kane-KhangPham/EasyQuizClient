@@ -6,24 +6,19 @@
         <div class="col-6 mb-2 row">
           <label class="col-3 pr-0">Lớp học</label>
           <p-dropdown [options]="listLopHoc"
-                      formControlName="lopHocId"
+                      formControlName="lopHoc"
                       class="col-9 pl-0"
-                      styleClass="w-100"
+                      optionLabel="value"
+                      styleClass="w-100 "
                       placeholder="Chọn lớp thi">
           </p-dropdown>
         </div>
         <div class="col-6 mb-2 row pr-0 pl-4">
           <label class="col-3 pr-0">Học phần</label>
-<!--          <p-dropdown [options]="listMonHoc"-->
-<!--                      formControlName="monHocId"-->
-<!--                      styleClass="w-100"-->
-<!--                      class="col-9 pl-0"-->
-<!--                      placeholder="Chọn học phần">-->
-<!--          </p-dropdown>-->
-          <p-autoComplete formControlName="monHocId"
+          <p-autoComplete formControlName="monHoc"
                           [suggestions]="listMonHoc"
                           (completeMethod)="filterMonHoc($event)"
-                          field="name" class="col-9 pl-0"
+                          field="value" class="col-9 pl-0"
                           [size]="10" styleClass="w-100"
                           placeholder="Chọn học phần"
                           [minLength]="1">
@@ -32,8 +27,9 @@
         <div class="col-6 mb-2 row">
           <label class="col-3 pr-0">Kỳ thi</label>
           <p-dropdown [options]="listKiThi"
+                      optionLabel="value"
                       class="col-9 pl-0"
-                      formControlName="kyThiId"
+                      formControlName="kyThi"
                       styleClass="w-100"
                       placeholder="Chọn kỳ thi">
           </p-dropdown>
@@ -75,18 +71,13 @@
   </div>
 </div>
 
-<div class="my-3 p-3 bg-white rounded shadow-sm">
+<div class="my-3 p-3 bg-white rounded shadow-sm dethi-list-question">
   <h6 class="">Danh sách câu hỏi</h6>
   <button pButton type="button"
           label="Thêm câu hỏi"
           class="mr-1 btn-sm btn ui-button-success"
           icon="pi pi-plus"
           (click)="showPopupAddQuestion()"></button>
-  <button pButton type="button"
-          label="Xem trước đề thi"
-          icon="pi pi-file-pdf"
-          class="btn-sm btn btn-info"
-          (click)="viewDeThi()"></button>
   <div class="row">
     <div *ngIf="listCauHoi.length > 0" class="col-12 mt-3">
       <p-table [value]="listCauHoi"
@@ -138,6 +129,24 @@
       <span class="text-info">Chưa có câu hỏi nào trong đề thi</span>
     </div>
   </div>
+</div>
+
+<div class="footer">
+  <button pButton type="button"
+          label="Lưu đề thi"
+          icon="pi pi-save"
+          class="btn-sm btn btn-info mr-2"
+          (click)="saveDeThi()"></button>
+  <button pButton type="button"
+          label="Xem trước đề thi"
+          icon="pi pi-file-pdf"
+          class="btn-sm btn mr-2 btn-info"
+          (click)="viewDeThi()"></button>
+  <button pButton type="button"
+          label="Hủy"
+          icon="pi pi-undo"
+          class="btn-sm btn"
+          (click)="viewDeThi()"></button>
 </div>
 
 

@@ -90,5 +90,10 @@ label {
   width: 100% !important;
 }
 
+main {
+  position: relative;
+  min-height: 100vh;
+}
+
 
 

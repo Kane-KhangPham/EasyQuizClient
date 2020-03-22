@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './Home/home.component';
 import { AppNavComponent } from './Home/app-nav/app-nav.component';
 import {DropdownModule} from 'primeng/dropdown';
+import {MessageService, ToastModule} from 'primeng';
 
 @NgModule({
   declarations: [
@@ -27,12 +28,14 @@ import {DropdownModule} from 'primeng/dropdown';
     HttpClientModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    DropdownModule
+    DropdownModule,
+    ToastModule
   ],
   providers: [
     AuthService,
     BaseService,
     AuthGuard,
+    MessageService
   ],
   bootstrap: [AppComponent]
 })

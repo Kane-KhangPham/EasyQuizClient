@@ -5,6 +5,7 @@ import {map} from 'rxjs/operators';
 import {SelectItem} from 'primeng';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {ObjectReference} from '../../shared/Model/DeThi';
 
 @Injectable({
   providedIn: 'root'
@@ -82,51 +83,35 @@ export class CauHoiService {
   /**
    * Lấy danh sách kì thi
    */
-  getListKyThi() {
+  getListKyThi():Observable<ObjectReference[]> {
     const url = '/dethi/getListKyThi';
-    return this.baseService.getRequest(url).pipe(
-      map(res => {
-        return res.map( item => {
-          return {
-            label: item.value,
-            value: item.id
-          } as SelectItem
-        })
-      })
-    );
+    return this.baseService.getRequest(url);
+    ;
   }
 
   /**
    * Lấy danh sách lớp học
    */
-  getListLopHoc() {
+  getListLopHoc(): Observable<ObjectReference[]> {
     const url = '/dethi/getListLopHoc';
-    return this.baseService.getRequest(url).pipe(
-      map(res => {
-        return res.map( item => {
-          return {
-            label: item.value,
-            value: item.id
-          } as SelectItem
-        })
-      })
-    );
+    return this.baseService.getRequest(url);
+    ;
   }
 
   /**
    * lấy danh sách suggestion môn học theo keyword
    */
-  suggestionMonHoc(filter: string) {
+  suggestionMonHoc(filter: string): Observable<ObjectReference[]> {
     const url = `/dethi/getListMonHoc?filter=${filter}`;
-    return this.baseService.getRequest(url).pipe(
-      map(res => {
-        return res.map( item => {
-          return {
-            label: item.value,
-            value: item.id
-          } as SelectItem
-        })
-      })
-    );
+    return this.baseService.getRequest(url);
+  }
+
+  /**
+   * Lưu đề thi
+   * @param data
+   */
+  saveDeThi(data) {
+    const url = '/dethi/createDeThi';
+    return this.baseService.post(url, data);
   }
 }

@@ -6,4 +6,5 @@ export class Question {
   optionC: string;
   optionD: string;
   tenMonHoc: string;
+  isDapAn: boolean = false;
 }
