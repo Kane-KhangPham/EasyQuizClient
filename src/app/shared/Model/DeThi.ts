@@ -7,9 +7,10 @@ export class DeThi {
   ngayThi: Date;
   thoiGian: number;
   soCau: number;
-  soLuongDe: number = 1;
+  soLuongDe: number;
   cauHoi: Question[];
   ghiChu: string;
+  kieuDanTrang: number;
 }
 
 export class ObjectReference {

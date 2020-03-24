@@ -1,7 +1,7 @@
 <div class="my-3 p-3 bg-white rounded shadow-sm">
   <h5 class="border-bottom border-gray pb-2 mb-0">Soạn đề thi</h5>
   <div class="row mt-3" [formGroup]="deThiForm">
-    <div class="col-9 pr-0">
+    <div class="col-8 pr-0">
       <div class="row">
         <div class="col-6 mb-2 row">
           <label class="col-3 pr-0">Lớp học</label>
@@ -37,6 +37,7 @@
         <div class="col-6 mb-2 row pr-0 pl-4">
           <label class="col-3 pr-0">Ngày thi</label>
           <p-calendar formControlName="ngayThi"
+                      dateFormat="dd-mm-yy"
                       placeholder="Chọn ngày thi"
                       class="col-9 pl-0">
           </p-calendar>
@@ -45,28 +46,48 @@
         <div class="col-6 mb-2 row">
           <label class="col-3 pr-1">Thời gian thi</label>
           <div class="col-9 pl-0">
-            <input type="text" formControlName="thoiGian" pInputText style="width: 100%;">
+            <input type="number" formControlName="thoiGian" pInputText style="width: 100%;">
           </div>
         </div>
 
         <div class="col-6 mb-2 row pr-0 pl-4">
           <label class="col-3 pr-1">Số lượng câu hỏi</label>
           <div class="col-9 pl-0">
-            <input type="text" size="30"
+            <input type="number" size="30"
                    pInputText
                    formControlName="soCau"
-                   class="w-100">
+                   class="w-100 ui-inputtext ui-state-default ui-widget">
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-3 mb-2 pl-0">
-      <label>Ghi chú</label>
-      <textarea rows="4" pInputTextarea
-                class="w-100"
-                formControlName="ghiChu">
-      </textarea>
+    <div class="col-4 mb-2 pl-0">
+      <div class="row mb-2">
+        <div class="col-6">
+        <p-dropdown [options]="listKieuDanTrang"
+                    optionLabel="value"
+                    class="col-12 pl-0"
+                    formControlName="kieuDanTrang"
+                    styleClass="w-100"
+                    placeholder="Chọn kiểu dàn trang">
+        </p-dropdown>
+        </div>
+        <div class="col-6">
+          <input type="number" size="30"
+                 pInputText
+                 formControlName="soLuongDe"
+                 placeholder="Số đề xáo trộn"
+                 class="w-100 ui-inputtext ui-state-default ui-widget">
+        </div>
+        <div class="col-12 mb-2">
+          <textarea rows="3" id="ghiChuArea"
+                    class="w-100"
+                    placeholder="Ghi chú"
+                    formControlName="ghiChu">
+          </textarea>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -137,6 +158,11 @@
           icon="pi pi-save"
           class="btn-sm btn btn-info mr-2"
           (click)="saveDeThi()"></button>
+  <p-splitButton label="Tải đề thi"
+                 class="mr-2"
+                 icon="pi pi-file"
+                 [model]="items">
+  </p-splitButton>
   <button pButton type="button"
           label="Xem trước đề thi"
           icon="pi pi-file-pdf"
@@ -145,8 +171,7 @@
   <button pButton type="button"
           label="Hủy"
           icon="pi pi-undo"
-          class="btn-sm btn"
-          (click)="viewDeThi()"></button>
+          class="btn-sm btn"></button>
 </div>
 
 

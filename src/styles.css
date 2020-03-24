@@ -95,5 +95,21 @@ main {
   min-height: 100vh;
 }
 
+body .ui-widget {
+  font-family: "Lato", sans-serif !important;
+}
+
+body .ui-inputtext:enabled:focus:not(.ui-state-error){
+  box-shadow: none;
+}
+
+.ui-inputtext {
+  font-size: 13px !important;
+}
+
+.ui-state-focus {
+  box-shadow: none !important;
+}
+
 
 
