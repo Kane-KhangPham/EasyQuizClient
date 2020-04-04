@@ -14,14 +14,14 @@ export class CauHoiService {
 
   constructor(private baseService: BaseService, private http: HttpClient) { }
 
-  getListCauHoi(page: number, pageSize: number, monHocId: number = 0, nguoiTao: number = 0) {
+  getListCauHoi(page: number, pageSize: number, monHocId: number = 0, keyword: string = '') {
     const url = '/question/getListQuestion';
     const params = {
       params: {
         page: page.toString(),
         pageSize: pageSize.toString(),
         monHoc: monHocId.toString(),
-        giaoVien: nguoiTao.toString()
+        keyword: keyword
       }
     };
     return this.baseService.getRequest(url, params);
@@ -83,7 +83,7 @@ export class CauHoiService {
   /**
    * Lấy danh sách kì thi
    */
-  getListKyThi():Observable<ObjectReference[]> {
+  getListKyThi(): Observable<ObjectReference[]> {
     const url = '/dethi/getListKyThi';
     return this.baseService.getRequest(url);
     ;

@@ -14,6 +14,6 @@ export class DeThi {
 }
 
 export class ObjectReference {
-  id: number;
+  id = 0;
   value: any;
 }

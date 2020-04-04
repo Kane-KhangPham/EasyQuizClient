@@ -17,6 +17,7 @@ import {
 } from 'primeng';
 import {DialogModule} from 'primeng/dialog';
 import { SoanDeComponent } from './soan-de/soan-de.component';
+import { DanhSachDeThiComponent } from './danh-sach-de-thi/danh-sach-de-thi.component';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { SoanDeComponent } from './soan-de/soan-de.component';
   ],
   declarations: [
     NganHangCauHoiComponent,
-    SoanDeComponent
+    SoanDeComponent,
+    DanhSachDeThiComponent
   ]
 })
 export class HomeModule {

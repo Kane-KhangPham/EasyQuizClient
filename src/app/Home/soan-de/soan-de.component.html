@@ -185,24 +185,30 @@
           [draggable]="false">
 
   <p-dataView [value]="questions"
+              #dataView
               [paginator]="true"
-              [rows]="15"
+              [rows]="5"
               [lazy]="true"
               (onLazyLoad)="loadData($event)"
               [totalRecords]="totalRecords">
     <p-header>
       <div class="ui-g">
-        <p-dropdown [options]="listMonHoc"
-                    class="mr-2"
-                    placeholder="Chọn người tạo">
-        </p-dropdown>
-        <p-dropdown [options]="listMonHoc"
-                    class="mr-2"
-                    placeholder="Chọn môn học">
-        </p-dropdown>
-        <input type="text" placeholder="Tìm kiếm theo câu hỏi" pInputText style="min-width: 20em;">
+        <p-autoComplete [(ngModel)]="puMonHocSearch"
+                        [suggestions]="listMonHoc"
+                        (completeMethod)="filterMonHoc($event)"
+                        field="value" class="mr-2"
+                        styleClass="w-custom-autocomplete"
+                        [size]="10"
+                        placeholder="Chọn học phần"
+                        [minLength]="1">
+        </p-autoComplete>
+        <input type="text"
+               placeholder="Tìm kiếm theo câu hỏi"
+               pInputText style="min-width: 20em;"
+               [(ngModel)]="puTextSearch">
         <button pButton type="button"
                 label="Tìm kiếm"
+                (click)="timKiemCauHoi()"
                 class="btn btn-success ml-2" icon="pi pi-search"></button>
       </div>
     </p-header>
@@ -211,6 +217,7 @@
         <label for="question-{{question.id}}" class="position-relative">
           <p-checkbox name="question"
                       binary="true"
+                      (onChange)="selectQuestionChange(question)"
                       [(ngModel)]="question.checked"
                       inputId="question-{{question.id}}">
           </p-checkbox>

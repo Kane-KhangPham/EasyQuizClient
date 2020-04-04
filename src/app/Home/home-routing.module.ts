@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NganHangCauHoiComponent } from './ngan-hang-cau-hoi/ngan-hang-cau-hoi.component';
 import {SoanDeComponent} from './soan-de/soan-de.component';
+import {DanhSachDeThiComponent} from './danh-sach-de-thi/danh-sach-de-thi.component';
 
 const routes: Routes = [
   {
@@ -16,7 +17,11 @@ const routes: Routes = [
   {
     path: 'soan-de',
     component: SoanDeComponent
-  }
+  },
+  {
+    path: 'danh-sach-de-thi',
+    component: DanhSachDeThiComponent
+  },
 ];
 
 @NgModule({

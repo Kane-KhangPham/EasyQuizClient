@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {SelectItem, SelectItemGroup} from 'primeng';
-import {Question} from '../../shared/Model/Question';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {SelectItem} from 'primeng';
 import {CauHoiService} from './cau-hoi.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ToastMessageService} from '../../shared/services/toast-message.service';
 
 @Component({
   selector: 'app-ngan-hang-cau-hoi',
@@ -10,42 +10,95 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['./ngan-hang-cau-hoi.component.css']
 })
 export class NganHangCauHoiComponent implements OnInit {
-  displayCreateModal: boolean;
-  listMonHoc: SelectItem[];
-  listGiaoVien: SelectItem[];
-  listCauHoi: any[] = [];
-  selectedMonHoc: string;
-  selectedGiaoVien: string;
-  pageSize = 25;
+  displayCreateModal = false;
+  listMonHocMain: SelectItem[] = [];
+  listMonHoc: SelectItem[] = [];
+  listCauHoi = [];
+  selectedMonHoc: number;
+  pageSize = 10;
   totalRow = 0;
   isCreate = true;
+  loading: boolean;
   selectedQuestion = null;
+  listDapAn: SelectItem[] = [];
+  keyword  = '';
 
   createForm: FormGroup;
   constructor(private cauHoiService: CauHoiService,
-              private buider: FormBuilder) { }
+              private buider: FormBuilder,
+              public changeRef: ChangeDetectorRef,
+              private messageService: ToastMessageService) { }
 
   ngOnInit(): void {
-    this.getListcauHoi();
     this.getLookupData();
     this.initForm();
+    this.listDapAn = [
+      {
+        label: 'A',
+        value: 'A'
+      },
+      {
+        label: 'B',
+        value: 'B'
+      },
+      {
+        label: 'C',
+        value: 'C'
+      },
+      {
+        label: 'D',
+        value: 'D'
+      },
+    ];
+    this.loading = true;
   }
 
+  /**
+   * Lấy dữ liệu cho combo box
+   */
   getLookupData() {
     this.cauHoiService.getSubjectLookup().subscribe(
-      response => this.listMonHoc = response);
+      response => {
+        this.listMonHoc = JSON.parse(JSON.stringify(response));
+        this.listMonHocMain = response;
+        this.listMonHocMain.unshift({
+          label: 'Tất cả',
+          value: 0
+        });
+      });
   }
 
-  private getListcauHoi(page = 1, monHocId = 0, nguoiTao= 0){
-    this.cauHoiService.getListCauHoi(page,this.pageSize, monHocId, nguoiTao)
+  /**
+   * Call api lấy danh sách câu hỏi
+   * @param page
+   * @param monHocId
+   * @param keyword
+   */
+  private getListcauHoi(page = 1, monHocId = 0, keyword: string = '') {
+    this.cauHoiService.getListCauHoi(page, this.pageSize, monHocId, keyword)
       .subscribe( res => {
         this.listCauHoi = res.data;
         this.totalRow = res.totalRow;
-      })
+        this.loading = false;
+      });
   }
 
-  search() {
+  /**
+   * Phân trang
+   * @param $event
+   */
+  loadListQuestion($event) {
+    const page = ($event.first / this.pageSize) + 1;
+    this.loading = true;
+    const monHocId = this.selectedMonHoc;
+    this.getListcauHoi(page, monHocId, this.keyword);
+  }
 
+  /**
+   * tìm kiếm
+   */
+  search() {
+    this.loadListQuestion({first: 0});
   }
 
   showCreateModal() {
@@ -53,10 +106,9 @@ export class NganHangCauHoiComponent implements OnInit {
     this.displayCreateModal = true;
   }
 
-  paginate($event) {
-
-  }
-
+  /**
+   * Khởi tạo form
+   */
   initForm() {
     this.createForm = this.buider.group({
       subject: [null, Validators.required],
@@ -64,26 +116,31 @@ export class NganHangCauHoiComponent implements OnInit {
       optionA: ['', Validators.required],
       optionB: ['', Validators.required],
       optionC: ['', Validators.required],
-      optionD: ['', Validators.required]
+      optionD: ['', Validators.required],
+      dapAn: ['', Validators.required]
     });
   }
 
+  /**
+   * Thêm mới hoặc edit question
+   */
   saveQuestion() {
     // validate data
-    if(this.createForm.invalid) {
+    if ( this.createForm.invalid) {
+      this.messageService.warn('Dữ liệu không hợp lệ!');
       return;
     }
     let data;
-    if(this.isCreate) {
+    if (this.isCreate) {
       data = this.createForm.getRawValue();
       data.monHocId = data.subject;
       delete data.subject;
       this.cauHoiService.createQuestion(data).subscribe(res => {
-        //to-do: thong bao thanh cong;
+        this.messageService.success('Tạo mới câu hỏi thành công');
         this.createForm.reset();
         this.displayCreateModal = false;
         this.getListcauHoi();
-      })
+      });
     } else {
       const fieldMapping = ['optionA', 'optionB', 'optionC', 'optionD'];
       data = this.createForm.getRawValue();
@@ -93,41 +150,55 @@ export class NganHangCauHoiComponent implements OnInit {
       postData.id = this.selectedQuestion.id;
       postData.options = this.selectedQuestion.options.map((item, index) => {
         item.value = data[fieldMapping[index]];
+        item.isDapAn = false;
         delete item.content;
         return item;
-      })
+      });
+      // lap dap an;
+      const dapAnKeyIndex = this.listDapAn.findIndex(x => x.value === data.dapAn);
+      postData.options[dapAnKeyIndex].isDapAn = true;
 
       this.cauHoiService.updateQuestion(postData).subscribe(res => {
-        //to-do: thong bao thanh cong;
+        this.messageService.success('Cập nhật thành công!');
         this.createForm.reset();
         this.displayCreateModal = false;
         this.getListcauHoi();
-      })
+      });
     }
   }
 
+  /**
+   * Xóa câu hỏi
+   * @param questionId
+   */
   deleteQuestion(questionId: number) {
     this.cauHoiService.deleteQuestion(questionId)
       .subscribe(res => {
-        if(res.success) {
+        if (res.success) {
           this.getListcauHoi();
         } else {
-          // to-do show toast message
+          this.messageService.error(res.message);
         }
-      })
+      });
   }
 
+  /**
+   * Sửa câu hỏi
+   * @param question
+   */
   editQuestion(question: any) {
     this.selectedQuestion = question;
     this.isCreate = false;
-    var bindFormData = {
+    const dapAnKeyIndex = (question.options as Array<any>).findIndex(x => x.isDapAn);
+    const bindFormData = {
       subject: this.listMonHoc.find(x => x.label === question.monHoc)?.value,
       question: question.content,
       optionA: question.options[0].content,
       optionB: question.options[1].content,
       optionC: question.options[2].content,
-      optionD: question.options[3].content
-    }
+      optionD: question.options[3].content,
+      dapAn: this.listDapAn[dapAnKeyIndex]?.value
+    };
 
     this.createForm.patchValue(bindFormData);
     this.displayCreateModal = true;

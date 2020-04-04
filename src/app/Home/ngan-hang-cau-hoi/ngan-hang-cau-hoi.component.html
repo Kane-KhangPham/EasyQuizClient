@@ -2,22 +2,17 @@
   <h5 class="border-bottom border-gray pb-2 mb-0">Ngân hàng câu hỏi</h5>
   <div class="row mt-3">
     <div class="col-3">
-      <p-dropdown [options]="listMonHoc"
+      <p-dropdown [options]="listMonHocMain"
                   [(ngModel)]="selectedMonHoc"
                   styleClass="w-100"
                   placeholder="Chọn môn học"></p-dropdown>
     </div>
 
-    <div class="col-3">
-      <p-dropdown [options]="listGiaoVien"
-                  [(ngModel)]="selectedGiaoVien"
-                  styleClass="w-100"
-                  placeholder="Chọn giáo viên tạo"></p-dropdown>
-    </div>
     <div class="col-4">
       <input type="text"
              pInputText
-             placeholder="Tìm kiếm"
+             [(ngModel)]="keyword"
+             placeholder="Tìm kiếm theo từ khóa câu hỏi"
              class="w-100"/>
     </div>
     <div class="col-2 d-flex align-items-end">
@@ -34,6 +29,8 @@
     </div>
     <div class="col-12">
       <p-table [value]="listCauHoi"
+               [lazy]="true" (onLazyLoad)="loadListQuestion($event)" [paginator]="true"
+               [rows]="pageSize" [totalRecords]="totalRow" [loading]="loading"
                dataKey="id">
         <ng-template pTemplate="header">
           <tr>
@@ -63,15 +60,15 @@
             <td [attr.colspan]="4">
               <div class="ui-g ui-fluid">
                 <div class="ui-g-6" *ngFor="let option of question.options; index as i">
-                  <b>{{i === 0 ? 'A' : i=== 1 ? 'B': i === 2 ? 'C' : 'D'}}. </b> <span>{{option.content}}</span>
+                  <span [ngClass]="option.isDapAn ? 'bg-danger' : ''"
+                        style="border-radius: 50%; text-align: center; display: inline-block; padding: 3px 8px;">
+                    {{i === 0 ? 'A' : i=== 1 ? 'B': i === 2 ? 'C' : 'D'}}
+                  </span>
+                  <span>.{{option.content}}</span>
                 </div>
               </div>
             </td>
           </tr>
-        </ng-template>
-
-        <ng-template pTemplate="paginatorleft">
-          <p-paginator [rows]="25" totalRecords="100" (onPageChange)="paginate($event)"></p-paginator>
         </ng-template>
       </p-table>
     </div>
@@ -82,12 +79,14 @@
 <!--popup them moi cau hoi-->
 <p-dialog [header]="isCreate ? 'Thêm mới câu hỏi' : 'Chỉnh sửa câu hỏi'"
           [(visible)]="displayCreateModal"
-          [style]="{width: '50vw'}"
+          [style]="{width: '50vw', height: 'auto'}"
           [maximizable]="true"
+          [resizable]="true"
           [position]="'top'"
           [baseZIndex]="10000"
-          [draggable]="false">
-  <div class="ui-g" [formGroup]="createForm">
+          [contentStyle]="{'overflow':'visible'}"
+          [modal]="true">
+  <div [formGroup]="createForm" class="ui-g dialog-create-question">
     <div class="ui-g-12">
       <label>Môn học</label>
       <p-dropdown [options]="listMonHoc"
@@ -132,6 +131,13 @@
                 formControlName="optionD"
                 pInputTextarea>
       </textarea>
+    </div>
+    <div class="ui-g-12">
+      <label> Đáp án</label>
+      <p-dropdown [options]="listDapAn"
+                  placeholder="Chọn đáp án"
+                  formControlName="dapAn">
+      </p-dropdown>
     </div>
   </div>
 

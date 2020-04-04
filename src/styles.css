@@ -111,5 +111,17 @@ body .ui-inputtext:enabled:focus:not(.ui-state-error){
   box-shadow: none !important;
 }
 
+.w-custom-autocomplete {
+  min-width: 20em !important;
+}
+
+.active-bg {
+  background-color: #333333;
+}
+
+.nav-item {
+  padding-left: 1em;
+}
+
 
 

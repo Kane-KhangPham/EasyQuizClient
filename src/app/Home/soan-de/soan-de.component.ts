@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DeThi, ObjectReference} from '../../shared/Model/DeThi';
 import {CauHoiService} from '../ngan-hang-cau-hoi/cau-hoi.service';
 import {ToastMessageService} from '../../shared/services/toast-message.service';
 import * as moment from 'moment';
 import {MenuItem} from 'primeng';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-soan-de',
@@ -12,18 +13,21 @@ import {MenuItem} from 'primeng';
   styleUrls: ['./soan-de.component.css']
 })
 export class SoanDeComponent implements OnInit {
+  @ViewChild('dataView') dataView;
   listLopHoc: ObjectReference[] = [];
   listKiThi: ObjectReference[] = [];
   listMonHoc: ObjectReference[] = [];
   deThiData: DeThi = new DeThi();
   deThiForm: FormGroup;
-  listCauHoi = [];
+  listCauHoi = [];          // list câu hỏi đã chọn ở main view
   displayCreateModal = false;
-  selectedQuestions = [];
-  questions = [];
+  questions = [];           // list câu hỏi trong popup chọn câu hỏi
   listKieuDanTrang: ObjectReference[] = [];
   totalRecords = 0;
   items: MenuItem[];
+  puMonHocSearch: ObjectReference = new ObjectReference();
+  puTextSearch = '';
+  puListQuestionSelected = [];
 
   constructor(private fb: FormBuilder,
               private cauHoiService: CauHoiService,
@@ -41,7 +45,7 @@ export class SoanDeComponent implements OnInit {
       },
       {
         label: 'Tải đáp án', icon: 'pi pi-info', command: () => {
-          this.downloadDeThi();
+          this.downloadDeThi(true);
         }
       },
     ];
@@ -55,6 +59,7 @@ export class SoanDeComponent implements OnInit {
     if (!data) {
       return;
     }
+    data.isContainDapAn = isContainDapAn;
     this.cauHoiService.viewDeThi(data).subscribe(response => {
       const file = new Blob([response], {type: 'application/octet-stream'});
       const fileURL = URL.createObjectURL(file);
@@ -117,19 +122,34 @@ export class SoanDeComponent implements OnInit {
     this.displayCreateModal = true;
   }
 
+  /**
+   * Lấy danh sách câu hỏi
+   * @param $event
+   */
   loadData($event) {
     const pageSize = $event.rows;
     const page = ($event.first / pageSize) + 1;
-    this.cauHoiService.getListCauHoi(page, pageSize)
+    const monhocId = this.puMonHocSearch.id;
+    const keyword = this.puTextSearch;
+    this.cauHoiService.getListCauHoi(page, pageSize, monhocId, keyword)
       .subscribe(res => {
-        this.questions = res.data;
+        if (this.puListQuestionSelected && this.puListQuestionSelected.length > 0) {
+          this.questions = res.data.map(x => {
+            const index = this.puListQuestionSelected.findIndex(y => x.id === y.id);
+            if (index > -1) {
+              return this.puListQuestionSelected[index];
+            }
+            return x;
+          });
+        } else {
+          this.questions = res.data;
+        }
         this.totalRecords = res.totalRow;
       });
   }
 
   addQuestion() {
-    this.listCauHoi = this.questions.filter(x => x.checked);
-    this.selectedQuestions = [];
+    this.listCauHoi = this.puListQuestionSelected;
     this.displayCreateModal = false;
   }
 
@@ -166,6 +186,7 @@ export class SoanDeComponent implements OnInit {
       this.messageService.error('Chưa đủ thông tin');
       return;
     }
+    formRawData.kieuDanTrang = formRawData.kieuDanTrang.id;
     formRawData.ngayThi = moment(formRawData.ngayThi, 'MM/DD/YYYY').format('YYYY-MM-DD');
     const data = JSON.parse(JSON.stringify(formRawData));
     data.cauHois = this.listCauHoi;
@@ -191,8 +212,35 @@ export class SoanDeComponent implements OnInit {
 
       const win = window.open();
       win.document.write(`<body><object
-              data="${fileURL}" type="application/pdf" width="100%" height="100%" name="xin chao a khang">
+              data="${fileURL}" type="application/pdf" width="100%" height="100%">
             </object></body>`);
     });
+  }
+
+  /**
+   * Tìm kiếm câu hỏi trên dialog
+   */
+  timKiemCauHoi() {
+    const pageInfo = {
+      rows: 10,
+      first: 0
+    };
+    this.dataView.first = 0;
+    this.loadData(pageInfo);
+  }
+
+  /**
+   * Khi select cau hoi
+   * @param question
+   */
+  selectQuestionChange(question: any) {
+    const index = this.puListQuestionSelected.findIndex(x => x.id === question.id);
+    if (question.checked) {
+      if (index === -1) {
+        this.puListQuestionSelected.push(question);
+      }
+    } else {
+      this.puListQuestionSelected.splice(index, 1);
+    }
   }
 }
