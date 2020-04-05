@@ -9,7 +9,7 @@
                       formControlName="lopHoc"
                       class="col-9 pl-0"
                       optionLabel="value"
-                      styleClass="w-100 "
+                      styleClass="w-100"
                       placeholder="Chọn lớp thi">
           </p-dropdown>
         </div>
@@ -19,7 +19,8 @@
                           [suggestions]="listMonHoc"
                           (completeMethod)="filterMonHoc($event)"
                           field="value" class="col-9 pl-0"
-                          [size]="10" styleClass="w-100"
+                          [size]="10"
+                          [styleClass]="f.monHoc.errors && (f.monHoc.dirty || f.monHoc.touched) ? 'error w-100': 'w-100'"
                           placeholder="Chọn học phần"
                           [minLength]="1">
           </p-autoComplete>
@@ -30,7 +31,7 @@
                       optionLabel="value"
                       class="col-9 pl-0"
                       formControlName="kyThi"
-                      styleClass="w-100"
+                      [styleClass]="f.kyThi.errors && (f.kyThi.dirty || f.kyThi.touched) ? 'error w-100': 'w-100'"
                       placeholder="Chọn kỳ thi">
           </p-dropdown>
         </div>
@@ -38,6 +39,7 @@
           <label class="col-3 pr-0">Ngày thi</label>
           <p-calendar formControlName="ngayThi"
                       dateFormat="dd-mm-yy"
+                      [styleClass]="f.ngayThi.errors && (f.ngayThi.dirty || f.ngayThi.touched) ? 'error w-100': 'w-100'"
                       placeholder="Chọn ngày thi"
                       class="col-9 pl-0">
           </p-calendar>
@@ -46,7 +48,11 @@
         <div class="col-6 mb-2 row">
           <label class="col-3 pr-1">Thời gian thi</label>
           <div class="col-9 pl-0">
-            <input type="number" formControlName="thoiGian" pInputText style="width: 100%;">
+            <input type="number"
+                   formControlName="thoiGian"
+                   pInputText
+                   [ngClass]="f.thoiGian.errors && (f.thoiGian.dirty || f.thoiGian.touched) ? 'error w-100': 'w-100'"
+                   style="width: 100%;">
           </div>
         </div>
 
@@ -55,6 +61,7 @@
           <div class="col-9 pl-0">
             <input type="number" size="30"
                    pInputText
+                   [ngClass]="f.soCau.errors && (f.soCau.dirty || f.soCau.touched) ? 'error w-100': 'w-100'"
                    formControlName="soCau"
                    class="w-100 ui-inputtext ui-state-default ui-widget">
           </div>
@@ -68,8 +75,8 @@
         <p-dropdown [options]="listKieuDanTrang"
                     optionLabel="value"
                     class="col-12 pl-0"
+                    [styleClass]="f.kieuDanTrang.errors && (f.kieuDanTrang.dirty || f.kieuDanTrang.touched) ? 'error w-100': 'w-100'"
                     formControlName="kieuDanTrang"
-                    styleClass="w-100"
                     placeholder="Chọn kiểu dàn trang">
         </p-dropdown>
         </div>
@@ -78,6 +85,7 @@
                  pInputText
                  formControlName="soLuongDe"
                  placeholder="Số đề xáo trộn"
+                 [ngClass]="f.soLuongDe.errors && (f.soLuongDe.dirty || f.soLuongDe.touched) ? 'error w-100': 'w-100'"
                  class="w-100 ui-inputtext ui-state-default ui-widget">
         </div>
         <div class="col-12 mb-2">
@@ -187,7 +195,7 @@
   <p-dataView [value]="questions"
               #dataView
               [paginator]="true"
-              [rows]="5"
+              [rows]="pageSize"
               [lazy]="true"
               (onLazyLoad)="loadData($event)"
               [totalRecords]="totalRecords">

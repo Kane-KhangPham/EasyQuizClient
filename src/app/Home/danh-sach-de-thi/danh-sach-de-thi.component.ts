@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {SelectItem} from 'primeng';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {MenuItem, SelectItem, TieredMenu} from 'primeng';
 import {CauHoiService} from '../ngan-hang-cau-hoi/cau-hoi.service';
 import {ToastMessageService} from '../../shared/services/toast-message.service';
 
@@ -11,11 +11,11 @@ import {ToastMessageService} from '../../shared/services/toast-message.service';
 export class DanhSachDeThiComponent implements OnInit {
   listDeThi: any[];
   listMonHoc: SelectItem[] = [];
-  selectedMonHoc = 0;
+  selectedMonHoc = null;
   pageSize = 25;
   totalRow = 0;
-  keyword = '';
   rowGroupMetadata: {};
+  loading: boolean;
 
   constructor(private cauHoiService: CauHoiService,
               private messageService: ToastMessageService) {
@@ -23,39 +23,7 @@ export class DanhSachDeThiComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLookupData();
-    this.listDeThi = [
-      {
-        deThiRootId: 1,
-        monHoc: 'Sinh học 1',
-        kyThi: 'Giữa kỳ 1 2020',
-        lopThi: 'Công nghệ thông tin 1 - K55'
-      },
-      {
-        deThiRootId: 1,
-        monHoc: 'Sinh học 1',
-        kyThi: 'Giữa kỳ 1 2020',
-        lopThi: 'Công nghệ thông tin 1 - K55'
-      },
-      {
-        deThiRootId: 1,
-        monHoc: 'Sinh học 1',
-        kyThi: 'Giữa kỳ 1 2020',
-        lopThi: 'Công nghệ thông tin 1 - K55'
-      },
-      {
-        deThiRootId: 2,
-        monHoc: 'Sinh học 2',
-        kyThi: 'Giữa kỳ 1 2020',
-        lopThi: 'Công nghệ thông tin 1 - K55'
-      },
-      {
-        deThiRootId: 2,
-        monHoc: 'Sinh học 2',
-        kyThi: 'Giữa kỳ 1 2020',
-        lopThi: 'Công nghệ thông tin 1 - K55'
-      },
-    ];
-    this.updateRowGroupMetaData();
+    this.loading = true;
   }
 
   /**
@@ -102,11 +70,22 @@ export class DanhSachDeThiComponent implements OnInit {
    * @param monHocId
    * @param keyword
    */
-  getListDeThi(page = 1, monHocId = 0, keyword: string = '') {
-    this.cauHoiService.getListCauHoi(page, this.pageSize, monHocId, keyword)
+  getListDeThi(page) {
+    this.loading = true;
+    const filter = {
+      page,
+      pageSize: this.pageSize,
+      kyThiId: 0,
+      namKyThi: 0,
+      monHocId: 0,
+      lopHocId: 0
+    };
+    this.cauHoiService.getListDeThi(filter)
       .subscribe(res => {
         this.listDeThi = res.data;
+        this.updateRowGroupMetaData();
         this.totalRow = res.totalRow;
+        this.loading = false;
       });
   }
 
@@ -116,15 +95,14 @@ export class DanhSachDeThiComponent implements OnInit {
    */
   loadDeThi($event) {
     const page = ($event.first / this.pageSize) + 1;
-    const monHocId = this.selectedMonHoc;
-    this.getListDeThi(page, monHocId, this.keyword);
+    this.getListDeThi(page);
   }
 
   /**
    * tìm kiếm
    */
   search() {
-    // this.loadListQuestion({first: 0});
+    this.loadDeThi({first: 0});
   }
 }
 

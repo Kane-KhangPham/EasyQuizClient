@@ -5,17 +5,22 @@
       <p-dropdown [options]="listMonHoc"
                   [(ngModel)]="selectedMonHoc"
                   styleClass="w-100"
-                  placeholder="Chọn môn học"></p-dropdown>
+                  placeholder="Tim kiếm theo môn học"></p-dropdown>
     </div>
 
-    <div class="col-4">
-      <input type="text"
-             pInputText
-             [(ngModel)]="keyword"
-             placeholder="Tìm kiếm theo từ khóa câu hỏi"
-             class="w-100"/>
+    <div class="col-3">
+      <p-dropdown [options]="listMonHoc"
+                  [(ngModel)]="selectedMonHoc"
+                  styleClass="w-100"
+                  placeholder="Tìm kiếm theo học kỳ"></p-dropdown>
     </div>
-    <div class="col-2 d-flex align-items-end">
+    <div class="col-3">
+      <p-dropdown [options]="listMonHoc"
+                  [(ngModel)]="selectedMonHoc"
+                  styleClass="w-100"
+                  placeholder="Tim kiếm theo lớp thi"></p-dropdown>
+    </div>
+    <div class="col-3 d-flex align-items-end">
       <button pButton type="button" label="Tìm kiếm" (click)="search()"></button>
     </div>
   </div>
@@ -24,34 +29,44 @@
 
   <div class="row">
     <div class="col-12">
-      <p-table [value]="listDeThi" dataKey="deThiRootId">
+      <p-table [value]="listDeThi"
+               [lazy]="true" (onLazyLoad)="loadDeThi($event)" [paginator]="true"
+               [rows]="pageSize" [totalRecords]="totalRow" [loading]="loading"
+               dataKey="deThiRootId">
         <ng-template pTemplate="header">
           <tr>
-            <th style="width: 5em;">STT</th>
-            <th>Học phần</th>
-            <th>Kỳ thi</th>
-            <th>Lớp thi</th>
-            <th style="width: 10em;">Hành động</th>
+            <th class="text-center">Học phần</th>
+            <th class="text-center">Kỳ thi</th>
+            <th class="text-center">Lớp thi</th>
+            <th class="text-center">Mã đề</th>
+            <th style="width: 10em;" class="text-center">Hành động</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
           <tr class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.deThiRootId].index === rowIndex">
-            <td colspan="5">
+            <td colspan="5" [ngClass]="expanded ? 'bg-selected' : ''">
               <a [pRowToggler]="rowData">
                 <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'"
                    style="vertical-align: middle;padding-bottom: .1em;"></i>
-                <span>Xin chào tất cả các bạn</span>
+                <span>Đề thi môn: {{rowData.monHoc}} - {{rowData.kyThi}}</span>
               </a>
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
           <tr>
-            <td>{{rowIndex + 1}}</td>
             <td>{{rowData.monHoc}}</td>
             <td>{{rowData.kyThi}}</td>
             <td>{{rowData.lopThi}}</td>
-            <td>Hành động</td>
+            <td>{{rowData.soDe}}</td>
+            <td style="position: relative" class="text-center">
+              <a class="btn p-2"><i class="fa fa-eye text-info" style="font-size: 1.05em; cursor: pointer"></i></a>
+              <a class="btn p-2" routerLink="/de-thi/soan-de/{{rowData.deThiId}}">
+                <i class="fa fa-edit text-warning"
+                   style="font-size: 1.05em; cursor: pointer">
+                </i>
+              </a>
+            </td>
           </tr>
         </ng-template>
       </p-table>

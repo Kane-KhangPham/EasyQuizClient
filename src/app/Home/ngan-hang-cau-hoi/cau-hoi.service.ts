@@ -95,7 +95,6 @@ export class CauHoiService {
   getListLopHoc(): Observable<ObjectReference[]> {
     const url = '/dethi/getListLopHoc';
     return this.baseService.getRequest(url);
-    ;
   }
 
   /**
@@ -113,5 +112,26 @@ export class CauHoiService {
   saveDeThi(data) {
     const url = '/dethi/createDeThi';
     return this.baseService.post(url, data);
+  }
+
+  /**
+   * Lấy danh sách đề thi
+   * @param filter
+   */
+  getListDeThi(filter) {
+    const url = '/dethi/getListDeThi';
+    const data = {
+      params: filter
+    };
+    return this.baseService.getRequest(url, data);
+  }
+
+  /**
+   * Get de thi detail
+   * @param id
+   */
+  getDeThiDetail(id: number): Observable<ObjectReference[]> {
+    const url = `/dethi/${id}`;
+    return this.baseService.getRequest(url);
   }
 }

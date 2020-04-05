@@ -15,6 +15,10 @@ const routes: Routes = [
     component: NganHangCauHoiComponent
   },
   {
+    path: 'soan-de/:id',
+    component: SoanDeComponent
+  },
+  {
     path: 'soan-de',
     component: SoanDeComponent
   },

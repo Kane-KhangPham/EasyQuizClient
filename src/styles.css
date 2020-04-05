@@ -123,5 +123,13 @@ body .ui-inputtext:enabled:focus:not(.ui-state-error){
   padding-left: 1em;
 }
 
+.error {
+  border: 1px solid red !important;
+}
+
+body .ui-corner-all {
+  border-radius: 0px !important;
+}
+
 
 

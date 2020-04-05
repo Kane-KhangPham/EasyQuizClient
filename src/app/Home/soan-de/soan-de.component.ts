@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DeThi, ObjectReference} from '../../shared/Model/DeThi';
 import {CauHoiService} from '../ngan-hang-cau-hoi/cau-hoi.service';
 import {ToastMessageService} from '../../shared/services/toast-message.service';
 import * as moment from 'moment';
 import {MenuItem} from 'primeng';
-import * as _ from 'lodash';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-soan-de',
@@ -28,14 +28,41 @@ export class SoanDeComponent implements OnInit {
   puMonHocSearch: ObjectReference = new ObjectReference();
   puTextSearch = '';
   puListQuestionSelected = [];
+  deId = 0;
+  pageSize = 25;
 
   constructor(private fb: FormBuilder,
               private cauHoiService: CauHoiService,
+              private route: ActivatedRoute,
               private messageService: ToastMessageService) {
   }
 
   ngOnInit(): void {
     this.initForm();
+    this.deId = +this.route.snapshot.paramMap.get('id');
+    if (this.deId) {
+      this.cauHoiService.getDeThiDetail(this.deId).subscribe((data: any) => {
+        this.deThiData = data;
+        this.listCauHoi = this.deThiData.cauHoi.map((x: any) => {
+          x.checked = true;
+          return x;
+        });
+        this.puListQuestionSelected = JSON.parse(JSON.stringify(this.listCauHoi));
+        this.loadData({first: 0, rows: this.pageSize});
+        const formData = {
+          lopHoc: this.deThiData.lopHoc,
+          kyThi: this.deThiData.kyThi,
+          monHoc: this.deThiData.monHoc,
+          ngayThi: new Date(this.deThiData.ngayThi.toString()),
+          thoiGian: this.deThiData.thoiGian,
+          soCau: this.deThiData.soCau,
+          soLuongDe: this.deThiData.soLuongDe,
+          ghiChu: this.deThiData.ghiChu,
+          kieuDanTrang: this.deThiData.kieuDanTrang
+        };
+        this.deThiForm.patchValue(formData);
+      });
+    }
     this.getDataForCombobox();
     this.items = [
       {
@@ -96,14 +123,14 @@ export class SoanDeComponent implements OnInit {
   initForm() {
     this.deThiForm = this.fb.group({
       lopHoc: [this.deThiData.lopHoc],
-      kyThi: [this.deThiData.kyThi],
-      monHoc: [this.deThiData.monHoc],
-      ngayThi: [this.deThiData.ngayThi],
-      thoiGian: [this.deThiData.thoiGian],
-      soCau: [this.deThiData.soCau],
-      soLuongDe: [this.deThiData.soLuongDe],
+      kyThi: [this.deThiData.kyThi, Validators.required],
+      monHoc: [this.deThiData.monHoc, Validators.required],
+      ngayThi: [this.deThiData.ngayThi, Validators.required],
+      thoiGian: [this.deThiData.thoiGian, Validators.required],
+      soCau: [this.deThiData.soCau, Validators.required],
+      soLuongDe: [this.deThiData.soLuongDe, Validators.required],
       ghiChu: [this.deThiData.ghiChu],
-      kieuDanTrang: [this.deThiData.kieuDanTrang]
+      kieuDanTrang: [this.deThiData.kieuDanTrang, Validators.required]
     });
   }
 
@@ -149,7 +176,7 @@ export class SoanDeComponent implements OnInit {
   }
 
   addQuestion() {
-    this.listCauHoi = this.puListQuestionSelected;
+    this.listCauHoi = JSON.parse(JSON.stringify(this.puListQuestionSelected));
     this.displayCreateModal = false;
   }
 
@@ -173,8 +200,14 @@ export class SoanDeComponent implements OnInit {
     }
     console.log('Form data:', data);
     this.cauHoiService.saveDeThi(data).subscribe(x => {
-      this.messageService.success('Success');
+      this.messageService.success('Tạo đề thi thành công!');
+    }, error => {
+      this.messageService.error('Tạo đề thi thất bại!');
     });
+  }
+
+  get f() {
+    return this.deThiForm.controls;
   }
 
   /**
@@ -183,7 +216,7 @@ export class SoanDeComponent implements OnInit {
   prepareData(): any {
     const formRawData = this.deThiForm.getRawValue();
     if (!this.validateData()) {
-      this.messageService.error('Chưa đủ thông tin');
+      this.messageService.error('Chưa nhập đủ thông tin!');
       return;
     }
     formRawData.kieuDanTrang = formRawData.kieuDanTrang.id;
@@ -197,7 +230,7 @@ export class SoanDeComponent implements OnInit {
    * Validate data
    */
   validateData() {
-    return true;
+    return this.deThiForm.valid;
   }
 
   viewDeThi() {

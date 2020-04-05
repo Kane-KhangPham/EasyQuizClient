@@ -6,38 +6,39 @@ import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
-  AutoCompleteModule,
-  ButtonModule,
-  CalendarModule,
-  CheckboxModule,
-  DataViewModule,
-  PaginatorModule,
-  SplitButtonModule,
-  TableModule
+    AutoCompleteModule,
+    ButtonModule,
+    CalendarModule,
+    CheckboxModule,
+    DataViewModule,
+    PaginatorModule,
+    SplitButtonModule,
+    TableModule, TieredMenuModule
 } from 'primeng';
 import {DialogModule} from 'primeng/dialog';
 import { SoanDeComponent } from './soan-de/soan-de.component';
 import { DanhSachDeThiComponent } from './danh-sach-de-thi/danh-sach-de-thi.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    InputTextModule,
-    ButtonModule,
-    HomeRoutingModule,
-    DropdownModule,
-    FormsModule,
-    TableModule,
-    InputTextModule,
-    DialogModule,
-    PaginatorModule,
-    ReactiveFormsModule,
-    CalendarModule,
-    DataViewModule,
-    CheckboxModule,
-    AutoCompleteModule,
-    SplitButtonModule
-  ],
+    imports: [
+        CommonModule,
+        InputTextModule,
+        ButtonModule,
+        HomeRoutingModule,
+        DropdownModule,
+        FormsModule,
+        TableModule,
+        InputTextModule,
+        DialogModule,
+        PaginatorModule,
+        ReactiveFormsModule,
+        CalendarModule,
+        DataViewModule,
+        CheckboxModule,
+        AutoCompleteModule,
+        SplitButtonModule,
+        TieredMenuModule
+    ],
   declarations: [
     NganHangCauHoiComponent,
     SoanDeComponent,
