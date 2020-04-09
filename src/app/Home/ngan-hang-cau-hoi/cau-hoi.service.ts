@@ -134,4 +134,13 @@ export class CauHoiService {
     const url = `/dethi/${id}`;
     return this.baseService.getRequest(url);
   }
+
+  /**
+   * Update đề thi
+   * @param data
+   */
+  updateDeThi(data) {
+    const url = '/dethi/updateDeThi';
+    return this.baseService.post(url, data);
+  }
 }

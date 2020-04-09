@@ -142,11 +142,14 @@ export class SoanDeComponent implements OnInit {
     const index = this.listCauHoi.findIndex(x => x.id === questionId);
     if (index >= 0) {
       this.listCauHoi.splice(index, 1);
+      const indexPopup = this.puListQuestionSelected.findIndex(x => x.id === questionId);
+      this.puListQuestionSelected.splice(indexPopup, 1);
     }
   }
 
   showPopupAddQuestion() {
     this.displayCreateModal = true;
+    this.loadData({first: 0, rows: this.pageSize});
   }
 
   /**
@@ -178,6 +181,7 @@ export class SoanDeComponent implements OnInit {
   addQuestion() {
     this.listCauHoi = JSON.parse(JSON.stringify(this.puListQuestionSelected));
     this.displayCreateModal = false;
+    this.questions = [];
   }
 
   /**
