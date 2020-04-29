@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {SelectItem} from 'primeng';
+import {ConfirmationService, SelectItem} from 'primeng';
 import {CauHoiService} from './cau-hoi.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ToastMessageService} from '../../shared/services/toast-message.service';
@@ -15,7 +15,7 @@ export class NganHangCauHoiComponent implements OnInit {
   listMonHoc: SelectItem[] = [];
   listCauHoi = [];
   selectedMonHoc: number;
-  pageSize = 10;
+  pageSize = 25;
   totalRow = 0;
   isCreate = true;
   loading: boolean;
@@ -26,7 +26,7 @@ export class NganHangCauHoiComponent implements OnInit {
   createForm: FormGroup;
   constructor(private cauHoiService: CauHoiService,
               private buider: FormBuilder,
-              public changeRef: ChangeDetectorRef,
+              private confirmationService: ConfirmationService,
               private messageService: ToastMessageService) { }
 
   ngOnInit(): void {
@@ -140,6 +140,8 @@ export class NganHangCauHoiComponent implements OnInit {
         this.createForm.reset();
         this.displayCreateModal = false;
         this.getListcauHoi();
+
+        this.displayCreateModal = false;
       });
     } else {
       const fieldMapping = ['optionA', 'optionB', 'optionC', 'optionD'];
@@ -163,6 +165,7 @@ export class NganHangCauHoiComponent implements OnInit {
         this.createForm.reset();
         this.displayCreateModal = false;
         this.getListcauHoi();
+        this.displayCreateModal = false;
       });
     }
   }
@@ -172,14 +175,23 @@ export class NganHangCauHoiComponent implements OnInit {
    * @param questionId
    */
   deleteQuestion(questionId: number) {
-    this.cauHoiService.deleteQuestion(questionId)
-      .subscribe(res => {
-        if (res.success) {
-          this.getListcauHoi();
-        } else {
-          this.messageService.error(res.message);
-        }
-      });
+    this.confirmationService.confirm({
+      message: 'Bạn có chắc muốn xóa câu hỏi này?',
+      header: 'Cảnh báo',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.cauHoiService.deleteQuestion(questionId)
+          .subscribe(res => {
+            if (res.success) {
+              this.messageService.success('Xoá thành công!')
+              this.getListcauHoi();
+            } else {
+              this.messageService.error(res.message);
+            }
+          });
+      },
+      key: 'deleteConfirmDialog'
+    });
   }
 
   /**

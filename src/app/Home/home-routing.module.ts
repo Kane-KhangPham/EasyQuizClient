@@ -3,6 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { NganHangCauHoiComponent } from './ngan-hang-cau-hoi/ngan-hang-cau-hoi.component';
 import {SoanDeComponent} from './soan-de/soan-de.component';
 import {DanhSachDeThiComponent} from './danh-sach-de-thi/danh-sach-de-thi.component';
+import {MonHocComponent} from './mon-hoc/mon-hoc.component';
+import {AccountSettingComponent} from '../account-setting/account-setting.component';
+import {GiaoVienComponent} from './giao-vien/giao-vien.component';
+import {AccountComponent} from "./account/account.component";
 
 const routes: Routes = [
   {
@@ -26,6 +30,13 @@ const routes: Routes = [
     path: 'danh-sach-de-thi',
     component: DanhSachDeThiComponent
   },
+  {
+    path: 'list-mon-hoc',
+    component: MonHocComponent
+  },
+  { path: 'account-setting/:id', component: AccountSettingComponent},
+  { path: 'list-giao-vien', component: GiaoVienComponent},
+  { path: 'list-account', component: AccountComponent}
 ];
 
 @NgModule({

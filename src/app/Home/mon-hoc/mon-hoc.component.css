@@ -1,0 +1,4 @@
+::ng-deep .dialog-create-question > div.ui-g-12 label{
+  font-size: 1em;
+  font-weight: 600 !important;
+}

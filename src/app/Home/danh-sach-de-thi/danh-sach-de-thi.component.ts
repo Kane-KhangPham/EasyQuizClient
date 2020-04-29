@@ -12,10 +12,14 @@ export class DanhSachDeThiComponent implements OnInit {
   listDeThi: any[];
   listMonHoc: SelectItem[] = [];
   selectedMonHoc = null;
+  selectedLopThi = null;
+  selectedKyThi = null;
   pageSize = 25;
   totalRow = 0;
   rowGroupMetadata: {};
   loading: boolean;
+  listKiThi = [];
+  listLopHoc = [];
 
   constructor(private cauHoiService: CauHoiService,
               private messageService: ToastMessageService) {
@@ -25,6 +29,7 @@ export class DanhSachDeThiComponent implements OnInit {
     this.getLookupData();
     this.loading = true;
   }
+
 
   /**
    * update metadata for group
@@ -62,6 +67,42 @@ export class DanhSachDeThiComponent implements OnInit {
           value: 0
         });
       });
+    this.cauHoiService.getListKyThi().subscribe(data => {
+      this.listKiThi = data;
+      this.listKiThi.unshift({
+        value: 'Tất cả',
+        id: 0
+      });
+    });
+    this.cauHoiService.getListLopHoc().subscribe(data => {
+      this.listLopHoc = data;
+      this.listLopHoc.unshift({
+        value: 'Tất cả',
+        id: 0
+      });
+    });
+  }
+
+  clearFilter() {
+    this.selectedMonHoc = undefined;
+    this.selectedLopThi = undefined;
+    this.selectedKyThi = undefined;
+  }
+
+  viewDeThi(id: number, sode: number) {
+    this.cauHoiService.getDeThiDetail(id).subscribe((data: any) => {
+      data.cauHois = data.cauHoi;
+      data.soDe = sode;
+      delete data.cauHoi;
+      this.cauHoiService.viewDeThi(data).subscribe(response => {
+        const file = new Blob([response], {type: 'application/pdf'});
+        const fileURL = URL.createObjectURL(file);
+        const win = window.open();
+        win.document.write(`<body><object
+              data="${fileURL}" type="application/pdf" width="100%" height="100%">
+            </object></body>`);
+      });
+    });
   }
 
   /**
@@ -75,11 +116,12 @@ export class DanhSachDeThiComponent implements OnInit {
     const filter = {
       page,
       pageSize: this.pageSize,
-      kyThiId: 0,
+      kyThiId: this.selectedKyThi?.id,
       namKyThi: 0,
-      monHocId: 0,
-      lopHocId: 0
+      monHocId: this.selectedMonHoc,
+      lopHocId: this.selectedLopThi?.id
     };
+    Object.keys(filter).forEach(key => !filter[key] && delete filter[key])
     this.cauHoiService.getListDeThi(filter)
       .subscribe(res => {
         this.listDeThi = res.data;
@@ -102,6 +144,7 @@ export class DanhSachDeThiComponent implements OnInit {
    * tìm kiếm
    */
   search() {
+    console.log('---------', this.selectedMonHoc)
     this.loadDeThi({first: 0});
   }
 }

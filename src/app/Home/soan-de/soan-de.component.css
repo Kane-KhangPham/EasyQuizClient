@@ -17,3 +17,8 @@
 #ghiChuArea {
   height: 61px;
 }
+
+.question-item {
+  border-bottom: 1px solid #b9b0b042 !important;
+  margin-bottom: 5px !important;
+}

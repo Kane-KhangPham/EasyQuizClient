@@ -36,6 +36,25 @@ export class CauHoiService {
     return this.baseService.post(url, data);
   }
 
+  createMonHoc(tenMonHoc: string) {
+    const  url = '/question/createMonHoc';
+    const data = {
+      id: 0,
+      name: tenMonHoc
+    };
+    return this.baseService.post(url, data);
+  }
+
+  updateMonHoc(data: any) {
+    const  url = '/question/updateMonHoc';
+    return this.baseService.post(url, data);
+  }
+
+  deleteMonHoc(id: number) {
+    const url = `/question/deleteMonHoc/${id}`
+    return this.baseService.deleteRequest(url);
+  }
+
   /**
    * Lấy danh sách môn học lookup
    */
@@ -86,7 +105,6 @@ export class CauHoiService {
   getListKyThi(): Observable<ObjectReference[]> {
     const url = '/dethi/getListKyThi';
     return this.baseService.getRequest(url);
-    ;
   }
 
   /**
@@ -95,6 +113,21 @@ export class CauHoiService {
   getListLopHoc(): Observable<ObjectReference[]> {
     const url = '/dethi/getListLopHoc';
     return this.baseService.getRequest(url);
+  }
+
+  /**
+   * Lấy danh sách môn học
+   */
+  getListMonHoc(page = 1, pageSize = 25, keyword = ''): Observable<any> {
+    const url = '/question/getListMonHoc';
+    const params = {
+      params: {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+        keyword: keyword
+      }
+    };
+    return this.baseService.getRequest(url, params);
   }
 
   /**
@@ -141,6 +174,77 @@ export class CauHoiService {
    */
   updateDeThi(data) {
     const url = '/dethi/updateDeThi';
+    return this.baseService.post(url, data);
+  }
+
+  getListGiaoVien(page = 1, pageSize = 25, keyword = '', khoaId?: number): Observable<any> {
+    const url = '/question/getListGiaoVien';
+    let params;
+    if(khoaId) {
+      params = {
+        params: {
+          page: page.toString(),
+          pageSize: pageSize.toString(),
+          keyword: keyword,
+          khoaId : khoaId
+        }
+      };
+    } else {
+      params = {
+        params: {
+          page: page.toString(),
+          pageSize: pageSize.toString(),
+          keyword: keyword
+        }
+      };
+    }
+    return this.baseService.getRequest(url, params);
+  }
+
+  createGiaoVien(tenGiaoVien: string, khoaId: number) {
+    const  url = '/question/createGiaoVien';
+    const data = {
+      id: 0,
+      name: tenGiaoVien,
+      khoaId: khoaId
+    };
+    return this.baseService.post(url, data);
+  }
+
+  updateGiaoVien(data: any) {
+    const  url = '/question/updateGiaoVien';
+    return this.baseService.post(url, data);
+  }
+
+  deleteGiaoVien(id: number) {
+    const url = `/question/deleteGiaoVien/${id}`
+    return this.baseService.deleteRequest(url);
+  }
+
+  getListKhoaLookup() {
+    const url = '/question/getListKhoa';
+    return this.baseService.getRequest(url);
+  }
+
+  createAccount(data: any) {
+    const  url = '/question/createAccount';
+    return this.baseService.post(url, data);
+  }
+
+  getListAccount(page: number, pageSize: number, keyword: string = '') {
+    const url = '/question/getListAccount';
+    const params = {
+      params: {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+        keyword: keyword
+      }
+    };
+    return this.baseService.getRequest(url, params);
+  }
+
+  changePassword(data) {
+    const  url = '/question/changePassword';
     return this.baseService.post(url, data);
   }
 }

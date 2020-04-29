@@ -17,6 +17,7 @@
           <label class="col-3 pr-0">Học phần</label>
           <p-autoComplete formControlName="monHoc"
                           [suggestions]="listMonHoc"
+                          [disabled]="!isCreation()"
                           (completeMethod)="filterMonHoc($event)"
                           field="value" class="col-9 pl-0"
                           [size]="10"
@@ -85,8 +86,7 @@
                  pInputText
                  formControlName="soLuongDe"
                  placeholder="Số đề xáo trộn"
-                 [ngClass]="f.soLuongDe.errors && (f.soLuongDe.dirty || f.soLuongDe.touched) ? 'error w-100': 'w-100'"
-                 class="w-100 ui-inputtext ui-state-default ui-widget">
+                 [ngClass]="f.soLuongDe.errors && (f.soLuongDe.dirty || f.soLuongDe.touched) ? 'error w-100': 'w-100'">
         </div>
         <div class="col-12 mb-2">
           <textarea rows="3" id="ghiChuArea"
@@ -142,7 +142,11 @@
             <td [attr.colspan]="4">
               <div class="ui-g ui-fluid">
                 <div class="ui-g-6" *ngFor="let option of question.options; index as i">
-                  <b>{{i === 0 ? 'A' : i === 1 ? 'B' : i === 2 ? 'C' : 'D'}}. </b> <span>{{option.content}}</span>
+                  <span [ngClass]="option.isDapAn ? 'bg-danger' : ''"
+                        style="border-radius: 50%; text-align: center; display: inline-block; padding: 3px 8px;">
+                    {{i === 0 ? 'A' : i=== 1 ? 'B': i === 2 ? 'C' : 'D'}}
+                  </span>
+                  <span>.{{option.content}}</span>
                 </div>
               </div>
             </td>
@@ -164,10 +168,12 @@
   <button pButton type="button"
           label="Lưu đề thi"
           icon="pi pi-save"
+          [disabled]= "isCreation() && isSaved"
           class="btn-sm btn btn-info mr-2"
           (click)="saveDeThi()"></button>
   <p-splitButton label="Tải đề thi"
                  class="mr-2"
+                 [disabled]="isCreation() && !isSaved"
                  icon="pi pi-file"
                  [model]="items">
   </p-splitButton>
@@ -176,10 +182,11 @@
           icon="pi pi-file-pdf"
           class="btn-sm btn mr-2 btn-info"
           (click)="viewDeThi()"></button>
-  <button pButton type="button"
+  <a pButton type="button"
           label="Hủy"
           icon="pi pi-undo"
-          class="btn-sm btn"></button>
+          routerLink="/de-thi/danh-sach-de-thi"
+          class="btn-sm btn"></a>
 </div>
 
 
@@ -203,6 +210,7 @@
       <div class="ui-g">
         <p-autoComplete [(ngModel)]="puMonHocSearch"
                         [suggestions]="listMonHoc"
+                        disabled="true"
                         (completeMethod)="filterMonHoc($event)"
                         field="value" class="mr-2"
                         styleClass="w-custom-autocomplete"
@@ -236,6 +244,9 @@
   </p-dataView>
 
   <p-footer>
+    <div class="font-weight-bold mt-2 d-inline-block float-left">
+      Số câu hỏi đã chọn: {{puListQuestionSelected.length}}
+    </div>
     <button type="button" pButton
             icon="pi pi-check"
             (click)="addQuestion()"
@@ -246,3 +257,4 @@
             class="ui-button-secondary"></button>
   </p-footer>
 </p-dialog>
+<p-confirmDialog [style]="{width: '25vw'}" key="deleteConfirmDialog" [baseZIndex]="10000"></p-confirmDialog>

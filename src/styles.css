@@ -64,6 +64,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}
 
 body {
     font-size: 0.875rem;
+  background-color: #efefef;
 }
 
 a.active {
@@ -129,6 +130,38 @@ body .ui-inputtext:enabled:focus:not(.ui-state-error){
 
 body .ui-corner-all {
   border-radius: 0px !important;
+}
+
+body .ui-state-disabled, body .ui-widget:disabled{
+  opacity: 0.8 !important;
+}
+.action-col span {
+  cursor: pointer;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 400px;
+  padding: 50px;
+  position: absolute;
+  left: 50%;
+  top:50%;
+  transform: translate(-50%, -75%);
+  background-color: #eceff4;
+  border-radius: 4px;
+}
+
+.has-error {
+  color: red !important;
+}
+
+body .ui-dialog .ui-dialog-titlebar .ui-dialog-title {
+  font-size: 1.2em !important;
+}
+
+.form-group > label {
+  font-weight: 600 !important;
+  padding-bottom: 0.25em !important;
 }
 
 

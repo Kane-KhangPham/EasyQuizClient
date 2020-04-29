@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-center row">
+  <div class="col-md-8">
+    <div class="my-3 p-3 bg-white rounded shadow-sm">
+      <h5 class="border-bottom border-gray pb-2 mb-0">Thông tin tài khoản</h5>
+      <div class="pt-3">
+        <div class="form-group">
+          <label>Tên tài khoản</label>
+          <input class="form-control" disabled [(ngModel)]="account.accountName"/>
+        </div>
+        <div class="form-group">
+          <label>Giáo viên</label>
+          <input class="form-control" disabled [(ngModel)]="account.giaoVienName"/>
+        </div>
+        <div class="form-group" *ngIf="isChangePass">
+          <label>Mật khẩu cũ</label>
+          <input class="form-control" type="password" [(ngModel)]="account.oldPass" (focus)="focusOldPass()" [ngClass]="{'error': invalidPassword}"/>
+          <span class="help-block has-error" *ngIf="invalidPassword">Không đúng mật khẩu</span>
+        </div>
+        <div class="form-group" *ngIf="isChangePass">
+          <label>Mật khẩu mới</label>
+          <input class="form-control" type="password" [(ngModel)]="account.newPass" (focus)="focusNewPass()"/>
+        </div>
+        <div class="form-group" *ngIf="isChangePass">
+          <label>Nhập lại mật khẩu</label>
+          <input class="form-control" type="password" [(ngModel)]="account.reNewPass" (focus)="focusNewPass()"  [ngClass]="{'error': notMatchPass}"/>
+          <span class="help-block has-error" *ngIf="notMatchPass">Mật khẩu không khớp</span>
+        </div>
+      </div>
+      <div>
+        <button pButton label="Đổi mật khẩu" (click)="changePassword()"></button>
+        <button pButton label="Huỷ" (click)="cancel()" class="ml-3 ui-button-warning" *ngIf="isChangePass"></button>
+      </div>
+    </div>
+  </div>
+</div>

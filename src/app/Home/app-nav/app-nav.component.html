@@ -2,7 +2,9 @@
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">EasyQuiz</a>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" href="javascript;"(click)="logout()">Sign out</a>
+            <a class="nav-link" (click)="menu.toggle($event)" style="cursor: pointer;">Tài khoản</a>
+          <p-menu #menu [popup]="true" [model]="items" [baseZIndex]="1000000000000"></p-menu>
         </li>
     </ul>
 </nav>
+

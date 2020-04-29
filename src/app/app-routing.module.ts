@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './shared/auth/auth-guard.service';
 import { HomeComponent } from './Home/home.component';
 import { Home_Routes } from './shared/routes/home.routes';
+import {AccountSettingComponent} from './account-setting/account-setting.component';
 
 
 const appRoutes: Routes = [

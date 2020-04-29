@@ -16,7 +16,9 @@
              class="w-100"/>
     </div>
     <div class="col-2 d-flex align-items-end">
-      <button pButton type="button" label="Tìm kiếm" (click)="search()"></button>
+      <button pButton type="button"
+              label="Tìm kiếm" (click)="search()"
+              icon="pi pi-search"></button>
     </div>
   </div>
 
@@ -24,8 +26,11 @@
 
   <div class="row">
     <div class="col-12 mb-2">
-      <button class="btn btn-success btn-sm"
-      (click)="showCreateModal()">Thêm mới</button>
+      <button type="button"
+              pButton
+              icon="pi pi-plus"
+              label="Thêm mới"
+              (click)="showCreateModal()"></button>
     </div>
     <div class="col-12">
       <p-table [value]="listCauHoi"
@@ -81,6 +86,7 @@
           [(visible)]="displayCreateModal"
           [style]="{width: '50vw', height: 'auto'}"
           [maximizable]="true"
+          [draggable]="false"
           [resizable]="true"
           [position]="'top'"
           [baseZIndex]="10000"
@@ -150,3 +156,6 @@
             class="ui-button-secondary"></button>
   </p-footer>
 </p-dialog>
+
+<p-confirmDialog [style]="{width: '25vw'}" key="deleteConfirmDialog" [baseZIndex]="10000"></p-confirmDialog>
+

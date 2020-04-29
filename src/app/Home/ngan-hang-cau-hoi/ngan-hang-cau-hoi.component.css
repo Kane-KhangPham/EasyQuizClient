@@ -2,10 +2,6 @@ textarea, input {
   width: 100%;
 }
 
-.action-col span {
-  cursor: pointer;
-}
-
 /*::ng-deep .ui-dialog-resizable .ui-dialog-content{*/
 /*  overflow: hidden !important;*/
 /*}*/
@@ -15,6 +11,6 @@ textarea, input {
 }
 
 ::ng-deep .dialog-create-question > div.ui-g-12 label{
-  font-weight: 500 !important;
-  font-size: 1.1em;
+  font-size: 1em;
+  font-weight: 600 !important;
 }

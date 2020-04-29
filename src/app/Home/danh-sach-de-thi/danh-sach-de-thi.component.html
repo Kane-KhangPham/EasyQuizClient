@@ -1,5 +1,5 @@
 <div class="my-3 p-3 bg-white rounded shadow-sm">
-  <h5 class="border-bottom border-gray pb-2 mb-0">Ngân hàng câu hỏi</h5>
+  <h5 class="border-bottom border-gray pb-2 mb-0">Danh sách đề thi</h5>
   <div class="row mt-3">
     <div class="col-3">
       <p-dropdown [options]="listMonHoc"
@@ -9,19 +9,28 @@
     </div>
 
     <div class="col-3">
-      <p-dropdown [options]="listMonHoc"
-                  [(ngModel)]="selectedMonHoc"
+      <p-dropdown [options]="listKiThi"
+                  [(ngModel)]="selectedKyThi"
+                  optionLabel="value"
                   styleClass="w-100"
                   placeholder="Tìm kiếm theo học kỳ"></p-dropdown>
     </div>
     <div class="col-3">
-      <p-dropdown [options]="listMonHoc"
-                  [(ngModel)]="selectedMonHoc"
+      <p-dropdown [options]="listLopHoc"
+                  [(ngModel)]="selectedLopThi"
+                  optionLabel="value"
                   styleClass="w-100"
                   placeholder="Tim kiếm theo lớp thi"></p-dropdown>
     </div>
     <div class="col-3 d-flex align-items-end">
-      <button pButton type="button" label="Tìm kiếm" (click)="search()"></button>
+      <button pButton icon="pi pi-search"
+              type="button"
+              label="Tìm kiếm"
+              (click)="search()"></button>
+      <button pButton type="button"
+              label="Xóa bộ lọc"
+              (click)="clearFilter()"
+              class="btn ui-button-warning ml-2" icon="pi pi-refresh"></button>
     </div>
   </div>
 
@@ -48,7 +57,7 @@
               <a [pRowToggler]="rowData">
                 <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'"
                    style="vertical-align: middle;padding-bottom: .1em;"></i>
-                <span>Đề thi môn: {{rowData.monHoc}} - {{rowData.kyThi}}</span>
+                <span>Đề thi môn: {{rowData.monHoc}} - {{rowData.kyThi}} - Lớp: {{rowData.lopThi}}</span>
               </a>
             </td>
           </tr>
@@ -60,7 +69,7 @@
             <td>{{rowData.lopThi}}</td>
             <td>{{rowData.soDe}}</td>
             <td style="position: relative" class="text-center">
-              <a class="btn p-2"><i class="fa fa-eye text-info" style="font-size: 1.05em; cursor: pointer"></i></a>
+              <a class="btn p-2" (click)="viewDeThi(rowData.deThiId, rowData.soDe)"><i class="fa fa-eye text-info" style="font-size: 1.05em; cursor: pointer"></i></a>
               <a class="btn p-2" routerLink="/de-thi/soan-de/{{rowData.deThiId}}">
                 <i class="fa fa-edit text-warning"
                    style="font-size: 1.05em; cursor: pointer">

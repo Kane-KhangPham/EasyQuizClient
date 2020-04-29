@@ -4,7 +4,7 @@ import {DeThi, ObjectReference} from '../../shared/Model/DeThi';
 import {CauHoiService} from '../ngan-hang-cau-hoi/cau-hoi.service';
 import {ToastMessageService} from '../../shared/services/toast-message.service';
 import * as moment from 'moment';
-import {MenuItem} from 'primeng';
+import {ConfirmationService, MenuItem} from 'primeng';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -30,14 +30,26 @@ export class SoanDeComponent implements OnInit {
   puListQuestionSelected = [];
   deId = 0;
   pageSize = 25;
+  isSaved = false;
 
   constructor(private fb: FormBuilder,
               private cauHoiService: CauHoiService,
               private route: ActivatedRoute,
+              private confirmationService: ConfirmationService,
               private messageService: ToastMessageService) {
   }
 
   ngOnInit(): void {
+    this.listKieuDanTrang = [
+      {
+        id: 1,
+        value: 'Toàn trang'
+      },
+      {
+        id: 2,
+        value: '2 cột'
+      },
+    ];
     this.initForm();
     this.deId = +this.route.snapshot.paramMap.get('id');
     if (this.deId) {
@@ -49,6 +61,7 @@ export class SoanDeComponent implements OnInit {
         });
         this.puListQuestionSelected = JSON.parse(JSON.stringify(this.listCauHoi));
         this.loadData({first: 0, rows: this.pageSize});
+        const kieuDanTrang = this.listKieuDanTrang.find(x => x.id === this.deThiData.kieuDanTrang)
         const formData = {
           lopHoc: this.deThiData.lopHoc,
           kyThi: this.deThiData.kyThi,
@@ -58,9 +71,10 @@ export class SoanDeComponent implements OnInit {
           soCau: this.deThiData.soCau,
           soLuongDe: this.deThiData.soLuongDe,
           ghiChu: this.deThiData.ghiChu,
-          kieuDanTrang: this.deThiData.kieuDanTrang
+          kieuDanTrang: kieuDanTrang
         };
         this.deThiForm.patchValue(formData);
+        this.deThiForm.get('soLuongDe').disable();
       });
     }
     this.getDataForCombobox();
@@ -102,16 +116,6 @@ export class SoanDeComponent implements OnInit {
    * Lấy danh sách dữ liệu cho combobox
    */
   getDataForCombobox() {
-    this.listKieuDanTrang = [
-      {
-        id: 1,
-        value: 'Toàn trang'
-      },
-      {
-        id: 2,
-        value: '2 cột'
-      },
-    ];
     this.cauHoiService.getListKyThi().subscribe(data => {
       this.listKiThi = data;
     });
@@ -138,17 +142,30 @@ export class SoanDeComponent implements OnInit {
    * Xóa câu hỏi trong danh sách đề thi
    */
   deleteQuestion(questionId: number) {
-    console.log('-- delete question with id:', questionId);
     const index = this.listCauHoi.findIndex(x => x.id === questionId);
     if (index >= 0) {
-      this.listCauHoi.splice(index, 1);
-      const indexPopup = this.puListQuestionSelected.findIndex(x => x.id === questionId);
-      this.puListQuestionSelected.splice(indexPopup, 1);
+      this.confirmationService.confirm({
+        message: 'Xác nhận xóa câu hỏi?',
+        header: 'Cảnh báo',
+        icon: 'pi pi-info-circle',
+        accept: () => {
+          this.listCauHoi.splice(index, 1);
+          const indexPopup = this.puListQuestionSelected.findIndex(x => x.id === questionId);
+          this.puListQuestionSelected.splice(indexPopup, 1);
+        },
+        key: 'deleteConfirmDialog'
+      });
     }
   }
 
   showPopupAddQuestion() {
+    const monHoc = this.deThiForm.get('monHoc').value;
+    if (!monHoc) {
+      this.messageService.warn('Vui lòng chọn môn học');
+      return;
+    }
     this.displayCreateModal = true;
+    this.puMonHocSearch = monHoc;
     this.loadData({first: 0, rows: this.pageSize});
   }
 
@@ -184,6 +201,10 @@ export class SoanDeComponent implements OnInit {
     this.questions = [];
   }
 
+  isCreation() {
+    return this.deId <= 0;
+  }
+
   /**
    * Gọi ý môn học
    */
@@ -202,12 +223,26 @@ export class SoanDeComponent implements OnInit {
     if (!data) {
       return;
     }
-    console.log('Form data:', data);
-    this.cauHoiService.saveDeThi(data).subscribe(x => {
-      this.messageService.success('Tạo đề thi thành công!');
-    }, error => {
-      this.messageService.error('Tạo đề thi thất bại!');
-    });
+    if (this.isCreation()) {
+      this.cauHoiService.saveDeThi(data).subscribe(x => {
+        if ( x.success) {
+          this.messageService.success(x.message);
+        } else {
+          this.messageService.error(x.message);
+        }
+        this.isSaved = true;
+      }, error => {
+        this.messageService.error('Tạo đề thi thất bại!');
+      });
+    } else {
+      // cập nhật đề thi
+      this.cauHoiService.updateDeThi(data).subscribe(x => {
+        this.messageService.success('Cập nhật đề thi thành công!');
+        this.isSaved = true;
+      }, error => {
+        this.messageService.error('Cập nhật đề thi thất bại!');
+      });
+    }
   }
 
   get f() {
@@ -223,10 +258,15 @@ export class SoanDeComponent implements OnInit {
       this.messageService.error('Chưa nhập đủ thông tin!');
       return;
     }
+    if (Number(formRawData.soCau) !== this.listCauHoi.length) {
+      this.messageService.warn('Số lượng câu hỏi không khớp nhau!');
+      return;
+    }
     formRawData.kieuDanTrang = formRawData.kieuDanTrang.id;
     formRawData.ngayThi = moment(formRawData.ngayThi, 'MM/DD/YYYY').format('YYYY-MM-DD');
     const data = JSON.parse(JSON.stringify(formRawData));
     data.cauHois = this.listCauHoi;
+    data.id = this.deId || 0;
     return data;
   }
 
@@ -242,6 +282,7 @@ export class SoanDeComponent implements OnInit {
     if (!data) {
       return;
     }
+    data.soDe = this.deThiData?.soDe;
     this.cauHoiService.viewDeThi(data).subscribe(response => {
       const file = new Blob([response], {type: 'application/pdf'});
       // tslint:disable-next-line:prefer-const
@@ -259,7 +300,7 @@ export class SoanDeComponent implements OnInit {
    */
   timKiemCauHoi() {
     const pageInfo = {
-      rows: 10,
+      rows: this.pageSize,
       first: 0
     };
     this.dataView.first = 0;

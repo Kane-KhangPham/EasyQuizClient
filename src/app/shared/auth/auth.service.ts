@@ -8,17 +8,8 @@ const jwtHelper = new JwtHelperService();
 
 @Injectable()
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<any>;
-  public currentUser: Observable<any>;
-
   constructor(private baseService: BaseService,
               private router: Router) {
-    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('loginUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
-  }
-
-  public get currentUserValue(): UserResponse {
-    return this.currentUserSubject.value;
   }
 
   login(username: string, password: string): Observable<UserResponse> {
@@ -29,29 +20,25 @@ export class AuthService {
     };
     return this.baseService.post(url, data)
       .pipe(map((user: UserResponse) => {
-      localStorage.setItem('loginUser', JSON.stringify(user));
-      this.currentUserSubject.next(user);
-      return user;
+        localStorage.setItem('loginUser', JSON.stringify(user));
+        localStorage.setItem('jwt', user.token);
+        return user;
     }));
   }
 
   logout() {
     localStorage.removeItem('loginUser');
-    this.currentUserSubject.next(null);
+    localStorage.removeItem('jwt');
     this.router.navigate(['login']);
   }
 
   isAuthenticated() {
-    // if (!!this.currentUserValue) {
-    //   const token = this.currentUserValue.token;
-    //   if (jwtHelper.isTokenExpired(token)) {
-    //     localStorage.removeItem('loginUser');
-    //     return false;
-    //   }
-    //   return true;
-    // }
-    // return false;
-    return true;
+    const token: string = localStorage.getItem('jwt');
+    if (token && !jwtHelper.isTokenExpired(token)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
@@ -59,4 +46,5 @@ export interface UserResponse {
   id: number;
   fullname: string;
   token: string;
+  accountName: string;
 }

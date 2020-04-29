@@ -10,6 +10,7 @@ export class DeThi {
   soLuongDe: number;
   cauHoi: Question[];
   ghiChu: string;
+  soDe: number;
   kieuDanTrang: number;
 }
 

@@ -9,7 +9,7 @@ import {
     AutoCompleteModule,
     ButtonModule,
     CalendarModule,
-    CheckboxModule,
+    CheckboxModule, ConfirmDialogModule,
     DataViewModule,
     PaginatorModule,
     SplitButtonModule,
@@ -18,6 +18,9 @@ import {
 import {DialogModule} from 'primeng/dialog';
 import { SoanDeComponent } from './soan-de/soan-de.component';
 import { DanhSachDeThiComponent } from './danh-sach-de-thi/danh-sach-de-thi.component';
+import { MonHocComponent } from './mon-hoc/mon-hoc.component';
+import { GiaoVienComponent } from './giao-vien/giao-vien.component';
+import { AccountComponent } from './account/account.component';
 
 @NgModule({
     imports: [
@@ -37,12 +40,16 @@ import { DanhSachDeThiComponent } from './danh-sach-de-thi/danh-sach-de-thi.comp
         CheckboxModule,
         AutoCompleteModule,
         SplitButtonModule,
-        TieredMenuModule
+        TieredMenuModule,
+        ConfirmDialogModule
     ],
   declarations: [
     NganHangCauHoiComponent,
     SoanDeComponent,
-    DanhSachDeThiComponent
+    DanhSachDeThiComponent,
+    MonHocComponent,
+    GiaoVienComponent,
+    AccountComponent
   ]
 })
 export class HomeModule {
