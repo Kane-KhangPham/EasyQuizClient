@@ -80,17 +80,16 @@
   </div>
 </div>
 
-
+<!--[contentStyle]="{'overflow':'visible'}"-->
 <!--popup them moi cau hoi-->
 <p-dialog [header]="isCreate ? 'Thêm mới câu hỏi' : 'Chỉnh sửa câu hỏi'"
           [(visible)]="displayCreateModal"
-          [style]="{width: '50vw', height: 'auto'}"
+          [style]="{width: '50vw'}"
           [maximizable]="true"
           [draggable]="false"
           [resizable]="true"
           [position]="'top'"
           [baseZIndex]="10000"
-          [contentStyle]="{'overflow':'visible'}"
           [modal]="true">
   <div [formGroup]="createForm" class="ui-g dialog-create-question">
     <div class="ui-g-12">
