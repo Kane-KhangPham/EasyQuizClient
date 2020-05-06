@@ -25,12 +25,19 @@
   <hr class="mb-3 mt-3">
 
   <div class="row">
-    <div class="col-12 mb-2">
+    <div class="col-12 mb-2 d-flex">
       <button type="button"
               pButton
               icon="pi pi-plus"
-              label="Thêm mới"
+              style="height: fit-content"
+              label="Thêm mới" class="mr-2"
               (click)="showCreateModal()"></button>
+      <p-fileUpload name="myfile[]" customUpload="true"
+                    #uploadbtn
+                    (uploadHandler)="import($event)"
+                    mode="basic" maxFileSize="1000000"
+                    [auto]="true" chooseLabel="Import Excel"></p-fileUpload>
+
     </div>
     <div class="col-12">
       <p-table [value]="listCauHoi"

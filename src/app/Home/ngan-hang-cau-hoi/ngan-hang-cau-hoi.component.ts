@@ -1,15 +1,17 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ConfirmationService, SelectItem} from 'primeng';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ConfirmationService, DialogService, DynamicDialogRef, FileUpload, SelectItem} from 'primeng';
 import {CauHoiService} from './cau-hoi.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ToastMessageService} from '../../shared/services/toast-message.service';
+import {ErorUploadDialog} from './erorUploadDialog';
 
 @Component({
   selector: 'app-ngan-hang-cau-hoi',
   templateUrl: './ngan-hang-cau-hoi.component.html',
   styleUrls: ['./ngan-hang-cau-hoi.component.css']
 })
-export class NganHangCauHoiComponent implements OnInit {
+export class NganHangCauHoiComponent implements OnInit, OnDestroy {
+  @ViewChild('uploadbtn') uploadBtn: FileUpload;
   displayCreateModal = false;
   listMonHocMain: SelectItem[] = [];
   listMonHoc: SelectItem[] = [];
@@ -21,13 +23,30 @@ export class NganHangCauHoiComponent implements OnInit {
   loading: boolean;
   selectedQuestion = null;
   listDapAn: SelectItem[] = [];
-  keyword  = '';
+  keyword = '';
+  ref: DynamicDialogRef;
 
   createForm: FormGroup;
+
   constructor(private cauHoiService: CauHoiService,
               private buider: FormBuilder,
+              public dialogService: DialogService,
               private confirmationService: ConfirmationService,
-              private messageService: ToastMessageService) { }
+              private messageService: ToastMessageService) {
+  }
+
+  show(data) {
+    this.ref = this.dialogService.open(ErorUploadDialog, {
+      header: 'Danh sác câu hỏi đã tồn tại',
+      width: '60%',
+      data: data,
+      contentStyle: {'max-height': '350px', overflow: 'auto'}
+    });
+  }
+
+  ngOnDestroy() {
+    this.ref.close();
+  }
 
   ngOnInit(): void {
     this.getLookupData();
@@ -76,7 +95,7 @@ export class NganHangCauHoiComponent implements OnInit {
    */
   private getListcauHoi(page = 1, monHocId = 0, keyword: string = '') {
     this.cauHoiService.getListCauHoi(page, this.pageSize, monHocId, keyword)
-      .subscribe( res => {
+      .subscribe(res => {
         this.listCauHoi = res.data;
         this.totalRow = res.totalRow;
         this.loading = false;
@@ -126,7 +145,7 @@ export class NganHangCauHoiComponent implements OnInit {
    */
   saveQuestion() {
     // validate data
-    if ( this.createForm.invalid) {
+    if (this.createForm.invalid) {
       this.messageService.warn('Dữ liệu không hợp lệ!');
       return;
     }
@@ -183,7 +202,7 @@ export class NganHangCauHoiComponent implements OnInit {
         this.cauHoiService.deleteQuestion(questionId)
           .subscribe(res => {
             if (res.success) {
-              this.messageService.success('Xoá thành công!')
+              this.messageService.success('Xoá thành công!');
               this.getListcauHoi();
             } else {
               this.messageService.error(res.message);
@@ -214,5 +233,30 @@ export class NganHangCauHoiComponent implements OnInit {
 
     this.createForm.patchValue(bindFormData);
     this.displayCreateModal = true;
+  }
+
+  import(event) {
+    let file: File;
+    if (event && event.files && event.files.length > 0) {
+      file = event.files[0];
+      console.log('file selected', file);
+      this.cauHoiService.importExcel(file).subscribe((res: any) => {
+        this.uploadBtn.clear();
+        if (res.success) {
+          this.messageService.success('Import thành công');
+          this.search();
+          return;
+        }
+        if (res.error) {
+          if (!res.error.data) {
+            this.messageService.error(res.error.message);
+          } else {
+            this.show(res.error.data);
+          }
+        }
+      });
+    } else {
+      this.messageService.warn('Vui lòng chọn file');
+    }
   }
 }

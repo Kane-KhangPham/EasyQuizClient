@@ -3,7 +3,7 @@ import {BaseService} from '../../shared/services/base.service';
 import {Question} from '../../shared/Model/Question';
 import {map} from 'rxjs/operators';
 import {SelectItem} from 'primeng';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ObjectReference} from '../../shared/Model/DeThi';
 
@@ -246,5 +246,11 @@ export class CauHoiService {
   changePassword(data) {
     const  url = '/question/changePassword';
     return this.baseService.post(url, data);
+  }
+
+  importExcel(file: any) {
+    const formData = new FormData();
+    formData.append('formFile', file);
+    return this.baseService.post('/question/import', formData);
   }
 }

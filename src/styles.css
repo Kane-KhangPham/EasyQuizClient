@@ -164,5 +164,9 @@ body .ui-dialog .ui-dialog-titlebar .ui-dialog-title {
   padding-bottom: 0.25em !important;
 }
 
+body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
+  float: right !important;
+}
+
 
 

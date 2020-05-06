@@ -10,7 +10,7 @@ import {
     ButtonModule,
     CalendarModule,
     CheckboxModule, ConfirmDialogModule,
-    DataViewModule,
+    DataViewModule, FileUploadModule,
     PaginatorModule,
     SplitButtonModule,
     TableModule, TieredMenuModule
@@ -21,6 +21,7 @@ import { DanhSachDeThiComponent } from './danh-sach-de-thi/danh-sach-de-thi.comp
 import { MonHocComponent } from './mon-hoc/mon-hoc.component';
 import { GiaoVienComponent } from './giao-vien/giao-vien.component';
 import { AccountComponent } from './account/account.component';
+import {ErorUploadDialog} from './ngan-hang-cau-hoi/erorUploadDialog';
 
 @NgModule({
     imports: [
@@ -41,10 +42,12 @@ import { AccountComponent } from './account/account.component';
         AutoCompleteModule,
         SplitButtonModule,
         TieredMenuModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        FileUploadModule
     ],
   declarations: [
     NganHangCauHoiComponent,
+    ErorUploadDialog,
     SoanDeComponent,
     DanhSachDeThiComponent,
     MonHocComponent,

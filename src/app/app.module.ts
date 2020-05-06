@@ -12,7 +12,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './Home/home.component';
 import { AppNavComponent } from './Home/app-nav/app-nav.component';
 import {DropdownModule} from 'primeng/dropdown';
-import {ButtonModule, ConfirmationService, MenuModule, MessageService, OverlayPanelModule, ToastModule} from 'primeng';
+import {
+  ButtonModule,
+  ConfirmationService,
+  DialogService,
+  MenuModule,
+  MessageService,
+  OverlayPanelModule,
+  ToastModule
+} from 'primeng';
 import { AccountSettingComponent } from './account-setting/account-setting.component';
 import {JwtModule} from '@auth0/angular-jwt';
 export function tokenGetter() {
@@ -51,7 +59,8 @@ export function tokenGetter() {
     BaseService,
     AuthGuard,
     MessageService,
-    ConfirmationService
+    ConfirmationService,
+    DialogService
   ],
   bootstrap: [AppComponent]
 })
