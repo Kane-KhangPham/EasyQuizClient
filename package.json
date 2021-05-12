@@ -23,7 +23,7 @@
     "@auth0/angular-jwt": "^4.0.0",
     "@fullcalendar/core": "^4.4.0",
     "bootstrap": "4.3.1",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
